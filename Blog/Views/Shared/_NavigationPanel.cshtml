@@ -1,17 +1,69 @@
 @model List<string>
-<div class="col-md-3" role="complementary">
-    <nav class="hidden-print hidden-sm hidden-xs affix">
-        <h2>Tags</h2>
-        <div>
-            @foreach (var tag in @Model)
-            {
-                <div style="margin: 10px">
-                    <a class="text-info" style="font-size: large" href="#">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span>@tag</span>
-                    </a>
-                </div>                                  
-            }
+@{
+    var firstHalfOfTags = new List<string>();
+    var secondHalfOfTags = new List<string>();
+    for (var i = 0; i < @Model.Count; i++)
+    {
+        if (i < @Model.Count / 2)
+        {
+            firstHalfOfTags.Add(@Model[i]);
+        }
+        else
+        {
+            secondHalfOfTags.Add(@Model[i]);
+        }
+    }
+}
+<div class="col-md-3" role="complementary">  
+    <div class="well" style="margin-top: 20px; width: 250px;">
+        <h4>
+            <i>
+                <span class="glyphicon glyphicon-search"></span>
+            </i> Blog Search...
+        </h4>
+        <div class="input-group">
+            <input type="text" class="form-control">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">
+                    <i>
+                        <span class="glyphicon glyphicon-search"></span>
+                    </i>
+                </button>
+            </span>
         </div>
-    </nav>
+    </div>
+
+    <div class="well" style=" width: 250px;">
+        <h4>
+            <i>
+                <span class="glyphicon glyphicon-tags"></span>
+            </i> Popular Tags:
+        </h4>
+        <div class="row">
+            <div class="col-lg-6">
+                <ul class="list-unstyled">
+                    @foreach (var tag in firstHalfOfTags)
+                    {
+                        <li>
+                            <a href="">
+                                <span class="badge">@tag</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <ul class="list-unstyled">
+                    @foreach (var tag in secondHalfOfTags)
+                    {
+                        <li>
+                            <a href="">
+                                <span class="badge">@tag</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
