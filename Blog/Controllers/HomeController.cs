@@ -10,6 +10,7 @@ namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
+        Random _rnd=new Random();
         public IActionResult Index()
         {
             var posts = GetPosts();
@@ -34,7 +35,8 @@ namespace Blog.Controllers
                               " deserunt mollit anim id est laborum.",
                     CreationTime = DateTime.Today.AddDays(i*(-1)),
                     LastEditTime = DateTime.Today,
-                    Tags = new List<string>{"tag"}
+                    Tags = new List<string>{"tag1, tag2, tag3"},
+                    Stars = _rnd.Next(5)
                 });
             }
 

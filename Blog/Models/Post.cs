@@ -12,5 +12,6 @@ namespace Blog.Models
         public DateTime LastEditTime { get; set; }
         public List<string> Tags { get; set; }
         public string Author { get; set; }
+        public int Stars { get; set; }
     }
 }
