@@ -10,13 +10,18 @@ namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
-        Random _rnd=new Random();
+        readonly Random _rnd=new Random();
         public IActionResult Index()
         {
             var posts = GetPosts();
             return View(posts);
         }
 
+        public IActionResult Details(Post post)
+        {
+            return View(post);
+        }
+      
         private List<Post> GetPosts()
         {
             var postCount = 10;
@@ -35,18 +40,23 @@ namespace Blog.Controllers
                               " deserunt mollit anim id est laborum.",
                     CreationTime = DateTime.Today.AddDays(i*(-1)),
                     LastEditTime = DateTime.Today,
-                    Tags = new List<string>{"tag1, tag2, tag3"},
-                    Stars = _rnd.Next(5)
+                    Tags = new List<string>{"tag1", "tag2", "tag3"},
+                    Stars = _rnd.Next(5),
+                    Image = $"https://picsum.photos/200/?image={1060+i}"
                 });
             }
 
             return posts;
         }
 
+        #region error handling
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
+
+        #endregion
     }
 }

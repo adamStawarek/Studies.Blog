@@ -1,0 +1,17 @@
+@model List<string>
+<div class="col-md-3" role="complementary">
+    <nav class="hidden-print hidden-sm hidden-xs affix">
+        <h2>Tags</h2>
+        <div>
+            @foreach (var tag in @Model)
+            {
+                <div style="margin: 10px">
+                    <a class="text-info" style="font-size: large" href="#">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span>@tag</span>
+                    </a>
+                </div>                                  
+            }
+        </div>
+    </nav>
+</div>

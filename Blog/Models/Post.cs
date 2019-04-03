@@ -13,5 +13,6 @@ namespace Blog.Models
         public List<string> Tags { get; set; }
         public string Author { get; set; }
         public int Stars { get; set; }
+        public string Image { get; set; }
     }
 }

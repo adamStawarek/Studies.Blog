@@ -4,35 +4,56 @@
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
-
-@foreach (var post in @Model)
-{
-    <div class="well" style="@(Model.IndexOf(post)== 0? "margin-top: 20px;" : null)">
-        <div class="media">
-            <a class="pull-left" href="#">
-                <img class="media-object" src="http://placekitten.com/150/150">
-            </a>
-            <div class="media-body">
-                <h4 class="media-heading">@post.Title</h4>
-                <p class="text-right">By @post.Author</p>
-                <p>@post.Content</p>
-                <ul class="list-inline list-unstyled">
-                    <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
-                    <li>|</li>
-                    <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
-                    <li>|</li>
-                    <li>
-                        @for (int j = 0; j < @post.Stars; j++)
+<div class="col-md-9">
+    @foreach (var post in @Model)
+    {
+        <div class="well" style="@(Model.IndexOf(post)== 0? "margin-top: 20px;" : null)">
+            <div class="media">
+                <a class="pull-left" href="#">
+                    <img class="media-object" src="@post.Image">
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading">@post.Title</h4>
+                    <p class="text-right">By @post.Author</p>
+                    <p>@string.Join(' ',@post.Content.Split().Take(50))
+                        <a asp-action="Details" asp-route-post="@post">...more</a>
+                     </p>
+                    <ul class="list-inline list-unstyled">
+                        <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
+                        <li>|</li>
+                        <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
+                        <li>|</li>
+                        <li>
+                            @for (int j = 0; j < @post.Stars; j++)
+                            {
+                                <span class="glyphicon glyphicon-star"></span>
+                            }
+                            @for (int j = 0; j < 5 - @post.Stars; j++)
+                            {
+                                <span class="glyphicon glyphicon-star-empty"></span>
+                            }
+                        </li>                   
+                    </ul>
+                    <div class="media-bottom">
+                        @foreach (var tag in @post.Tags)
                         {
-                            <span class="glyphicon glyphicon-star"></span>
+                            <span class=" label label-info">@tag</span>
                         }
-                        @for (int j = 0; j < 5 - @post.Stars; j++)
-                        {
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                        }
-                    </li>                   
-                </ul>
+                    </div>
+                </div>
+           
             </div>
         </div>
-    </div>
-}
+    }
+
+</div>
+<div class="col-md-3">
+    @{
+        var randomTags=new List<string>();
+        for (int i = 0; i < 5; i++)
+        {
+            randomTags.Add($"tag{i}");
+        }
+    }
+    @await Html.PartialAsync("_NavigationPanel", randomTags)
+</div>

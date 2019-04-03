@@ -33,13 +33,16 @@
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2019 - Blog</p>
-        </footer>
+<div class="container body-content">
+    <div class="row">
+         @RenderBody()        
     </div>
+   
+    <hr/>
+    <footer>
+        <p>&copy; 2019 - Blog</p>
+    </footer>
+</div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
