@@ -1,14 +1,14 @@
 @using Blog.Controllers
-@model List<Post>
+@model IEnumerable<Post>
 
 @{
-    ViewBag.Title = "title";
     Layout = "_Layout";
 }
 <div class="col-md-9">
+  
     @foreach (var post in @Model)
     {
-        <div class="well" style="@(Model.IndexOf(post)== 0? "margin-top: 20px;" : null)">
+        <div class="well" style="@(Model.ToList().IndexOf(post) == 0 ? "margin-top: 20px;" : null)">
             <div class="media">
                 <a class="pull-left" href="#">
                     <img class="media-object" src="@post.Image">
@@ -16,9 +16,9 @@
                 <div class="media-body">
                     <h4 class="media-heading">@post.Title</h4>
                     <p class="text-right">By @post.Author</p>
-                    <p>@string.Join(' ',@post.Content.Split().Take(50))
-                        @Html.ActionLink("...more","Details", new { id=post.Id})
-                     </p>
+                    <p>@string.Join(' ', @post.Content.Split().Take(50))
+                        @Html.ActionLink("...more", "Details", new {id = post.Id})
+                    </p>
                     <ul class="list-inline list-unstyled">
                         <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
                         <li>|</li>
@@ -33,20 +33,28 @@
                             {
                                 <span class="glyphicon glyphicon-star-empty"></span>
                             }
-                        </li>                   
+                        </li>
                     </ul>
                     <div class="media-bottom">
                         @foreach (var tag in @post.Tags)
                         {
                             <span class=" label label-info">@tag</span>
                         }
+                        @using (Html.BeginForm("Delete", "Home", new {@post.Id}, FormMethod.Post, null, new {style = "display:inline;"}))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger"
+                                    style="float: right">Delete</button>
+                        }
+
+                        @Html.ActionLink("Edit", "Edit", new {id = post.Id},
+                            new {@class = "btn btn-primary", @style = "float:right;margin-right:10px;"})
                     </div>
                 </div>
-           
+
             </div>
         </div>
     }
-
 </div>
 <div class="col-md-3">
     @{

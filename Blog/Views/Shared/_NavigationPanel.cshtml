@@ -15,11 +15,18 @@
     }
 }
 <div class="col-md-3" role="complementary">  
-    <div class="well" style="margin-top: 20px; width: 250px;">
+    <div class="well text-center" style="margin-top: 20px; width: 250px;">
         <h4>
-            <i>
-                <span class="glyphicon glyphicon-search"></span>
-            </i> Blog Search...
+            <span class="glyphicon glyphicon-pencil" style="margin-right: 5px;"></span>
+            Create new post
+        </h4>
+        @Html.ActionLink("Create", "Create", "Home", null, new {@class = "btn btn-primary"})
+    </div>
+    
+    <div class="well text-center" style="width: 250px;">
+        <h4>
+            <span class="glyphicon glyphicon-search" style="margin-right: 5px;"></span>
+            Blog Search...
         </h4>
         <div class="input-group">
             <input type="text" class="form-control">
@@ -33,11 +40,10 @@
         </div>
     </div>
 
-    <div class="well" style=" width: 250px;">
-        <h4>
-            <i>
-                <span class="glyphicon glyphicon-tags"></span>
-            </i> Popular Tags:
+    <div class="well text-center" style=" width: 250px;">
+        <h4>          
+            <span class="glyphicon glyphicon-tags" style="margin-right: 5px;"></span>
+            Popular Tags:
         </h4>
         <div class="row">
             <div class="col-lg-6">
