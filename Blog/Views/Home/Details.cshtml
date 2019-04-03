@@ -1,8 +1,21 @@
 @model Post
 
 @{
-    ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
 <h2>@Model.Title</h2>
+<div>
+    <span>@Model.Author - @Model.LastEditTime.ToLongDateString()</span>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-9">
+        <p style="float: left; margin-right: 10px;"><img class="media-object" src="@Model.Image"></p>
+        <p style="margin: 10px">
+            @Model.Content
+        </p>
+    </div>
+    
+</div>
+<a asp-action="Index" asp-controller="Home" class="btn btn-primary" >Back</a>

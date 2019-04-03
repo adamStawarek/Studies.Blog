@@ -10,15 +10,21 @@ namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
-        readonly Random _rnd=new Random();
+        private readonly Random _rnd=new Random();
+        private readonly List<Post> _posts;
+        public HomeController()
+        {
+            _posts = GetPosts();
+        }
+        
         public IActionResult Index()
         {
-            var posts = GetPosts();
-            return View(posts);
+            return View(_posts);
         }
 
-        public IActionResult Details(Post post)
+        public IActionResult Details(int id)
         {
+            var post = _posts.FirstOrDefault(p => p.Id == id);
             return View(post);
         }
       
@@ -30,7 +36,7 @@ namespace Blog.Controllers
             {
                 posts.Add(new Post()
                 {
-                    Id = 1,
+                    Id = i,
                     Author = "adam stawarek",
                     Title = $"Post #{i}",
                     Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut" +

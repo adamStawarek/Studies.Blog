@@ -1,3 +1,4 @@
+@using Blog.Controllers
 @model List<Post>
 
 @{
@@ -16,7 +17,7 @@
                     <h4 class="media-heading">@post.Title</h4>
                     <p class="text-right">By @post.Author</p>
                     <p>@string.Join(' ',@post.Content.Split().Take(50))
-                        <a asp-action="Details" asp-route-post="@post">...more</a>
+                        @Html.ActionLink("...more","Details", new { id=post.Id})
                      </p>
                     <ul class="list-inline list-unstyled">
                         <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
