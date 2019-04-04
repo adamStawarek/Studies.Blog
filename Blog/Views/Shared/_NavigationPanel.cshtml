@@ -1,7 +1,7 @@
-@model List<string>
+@model List<Tag>
 @{
-    var firstHalfOfTags = new List<string>();
-    var secondHalfOfTags = new List<string>();
+    var firstHalfOfTags = new List<Tag>();
+    var secondHalfOfTags = new List<Tag>();
     for (var i = 0; i < @Model.Count; i++)
     {
         if (i < @Model.Count / 2)
@@ -52,7 +52,7 @@
                     {
                         <li>
                             <a href="">
-                                <span class="badge">@tag</span>
+                                <span class="badge">@tag.Name</span>
                             </a>
                         </li>
                     }
@@ -64,7 +64,7 @@
                     {
                         <li>
                             <a href="">
-                                <span class="badge">@tag</span>
+                                <span class="badge">@tag.Name</span>
                             </a>
                         </li>
                     }

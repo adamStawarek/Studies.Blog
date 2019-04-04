@@ -11,8 +11,20 @@ namespace Blog.Controllers
     public class HomeController : Controller
     {
         private static readonly Random Rnd=new Random();
+        private static readonly List<Tag> Tags=new List<Tag>{
+            new Tag(){Id=1,Name="Tag1"},
+            new Tag(){Id=2,Name="Tag2"},
+            new Tag(){Id=3,Name="Tag3"},
+            new Tag(){Id=4,Name="Tag4"},
+            new Tag(){Id=5,Name="Tag5"},
+            new Tag(){Id=6,Name="Tag6"},
+            new Tag(){Id=7,Name="Tag7"},
+            new Tag(){Id=8,Name="Tag8"},
+            new Tag(){Id=9,Name="Tag9"},
+            new Tag(){Id=10,Name="Tag10"}
+        };
         private static readonly List<Post> Posts=GetPosts();
-      
+            
         private static List<Post> GetPosts()
         {
             var postCount = 10;
@@ -31,7 +43,7 @@ namespace Blog.Controllers
                               " deserunt mollit anim id est laborum.",
                     CreationTime = DateTime.Today.AddDays(i*(-1)),
                     LastEditTime = DateTime.Today,
-                    Tags = new List<string>{"tag1", "tag2", "tag3"},
+                    Tags = Tags.Where((t=>t.Id<Rnd.Next(Tags.Count))).ToList(),
                     Stars = Rnd.Next(5),
                     Image = $"https://picsum.photos/200/?image={1060+i}"
                 });
@@ -42,7 +54,12 @@ namespace Blog.Controllers
         
         public IActionResult Index()
         {
-            return View(Posts);
+            var vm=new HomeViewModel()
+            {
+                Posts = Posts,
+                Tags = Tags
+            };
+            return View(vm);
         }
 
         public IActionResult Details(int id)
@@ -101,7 +118,7 @@ namespace Blog.Controllers
                     Id = id,
                     Title = model.Title,
                     Content = model.Content,
-                    Tags = new List<string>(),
+                    Tags = model.Tags,
                     Author="adam stawarek",
                     CreationTime = DateTime.Today,
                     LastEditTime = DateTime.Today,
@@ -120,8 +137,6 @@ namespace Blog.Controllers
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
 
-        #endregion
-
-       
+        #endregion       
     }
 }
