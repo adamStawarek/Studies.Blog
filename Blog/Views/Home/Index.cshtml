@@ -36,9 +36,9 @@
                         </li>
                     </ul>
                     <div class="media-bottom">
-                        @foreach (var tag in @post.Tags)
+                        @foreach (var tag in @post.PostTags)
                         {
-                            <span class=" label label-info">@tag.Name</span>
+                            <span class=" label label-info">@tag.Tag.Name</span>
                         }
                         @using (Html.BeginForm("Delete", "Home", new {@post.Id}, FormMethod.Post, null, new {style = "display:inline;"}))
                         {

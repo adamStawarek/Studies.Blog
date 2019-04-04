@@ -3,3 +3,7 @@
 ################################################################################
 
 /.idea/.idea.Blog
+/.vs
+/Blog/bin/Debug/netcoreapp2.1
+/Blog/obj
+/Blog.sln.DotSettings.user

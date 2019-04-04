@@ -9,10 +9,10 @@ namespace Blog.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime CreationTime { get; set; }
-        public DateTime LastEditTime { get; set; }
-        public List<Tag> Tags { get; set; }
+        public DateTime LastEditTime { get; set; }       
         public string Author { get; set; }
         public int Stars { get; set; }
         public string Image { get; set; }
+        public List<PostTag> PostTags { get; set; } = new List<PostTag>();
     }
 }
