@@ -4,12 +4,17 @@
     Layout = "_Layout";
 }
 
+@{
+    var currentPic = 1;
+}
+
 <h2 style="margin-top: 20px;">Create new post</h2>
 <hr />
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <form asp-action="Create" onkeypress="return event.keyCode != 13;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Post.Title" class="control-label"></label>
                 <input asp-for="Post.Title" class="form-control" />
@@ -28,27 +33,44 @@
                     <div class="tags_dropdown"></div>
                 </div>
             </div>
+            <input id="image" type="hidden" asp-for="Post.Image"/>
             <div class="form-group">
                 <input type="submit" onclick="addTags()" value="Create" class="btn btn-primary" />
             </div>
-        </form>
 
+
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        <img id="postImg" src="https://picsum.photos/400/?image=1" />
+        <button id="btnChangePic" class="btn btn-primary" style="margin: 10px 10px 0 0;">Change picture</button>
     </div>
 </div>
-
 @section Scripts
-{  
+    {
     <script>
-        $(document).ready(function () {                       
+        var currentPic = Math.floor((Math.random() * 1084) + 1);
+        $(document).ready(function () {
+
             $("#add_tag").on('keyup', function (e) {
                 if (e.keyCode == 13) {
                     addTags();
                 }
-            });          
+            });
+
+            $("#btnChangePic").click(function(e) {
+                currentPic = Math.floor((Math.random() * 1084) + 1);
+                $('#postImg').attr("src", "https://picsum.photos/400/?image="+currentPic);
+                console.log(@currentPic);
+            });
         });
+
         function addTags() {
             $('#modelTags').val($('#tagInput').val());
+            $('#image').val($('#postImg').attr("src"));
         }
+
         new inputTags({
             asd: true,
             id: 'add_tag',
@@ -59,5 +81,6 @@
                 addTags();
             }
         });
+
     </script>
 }

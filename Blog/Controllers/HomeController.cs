@@ -23,10 +23,11 @@ namespace Blog.Controllers
             var vm = new HomeViewModel()
             {
                 Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                    .OrderByDescending(d => d.Id)
                     .Batch(4)
                     .ElementAt(currentPage-1)
-                    .OrderByDescending(d=>d.Id).ToList(),
-                Tags = _context.Tags.ToList(),
+                    .ToList(),
+                Tags = _context.Tags.Take(10).ToList(),//TODO take only the most popular ones
                 CurrentPage = currentPage,
                 TotalPages =(int)Math.Ceiling(_context.Posts.Count()/4.0)
             };
@@ -128,8 +129,7 @@ namespace Blog.Controllers
             {
                 return View();
             }
-
-            var maxId = _context.Posts.Max(p => p.Id);
+           
             var post = model.Post;
             var newPost = new Post()
             {
@@ -139,7 +139,7 @@ namespace Blog.Controllers
                 Author = "adam stawarek",
                 CreationTime = DateTime.Today,
                 LastEditTime = DateTime.Today,
-                Image = $"https://picsum.photos/200/?image={maxId%1085}",
+                Image = post.Image.Replace("/400","/200"),//we need to change size of the image
                 Stars = 0
             };
             _context.Posts.Add(newPost);
