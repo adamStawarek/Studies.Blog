@@ -50,22 +50,56 @@ namespace Blog.Controllers
             if (id == null)
                 return new BadRequestResult();
 
-            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _context.Posts.Include(p=>p.PostTags).ThenInclude(p=>p.Tag).FirstOrDefault(p => p.Id == id);
             if (post == null)
                 return new BadRequestResult();
-            return View(post);
+
+            var model=new CreatePostViewModel()
+            {
+                Post = post,
+                Tags=string.Join(',',post.PostTags.Select(p=>p.Tag.Name).ToList())
+            };
+            return View(model);
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public IActionResult Edit(Post post)
+        public IActionResult Edit(CreatePostViewModel model)
         {
             if (!ModelState.IsValid) return View();
 
+            var post = model.Post;
             var _post = _context.Posts.FirstOrDefault(p => p.Id == post.Id);
             _post.Content = post.Content;
             _post.Title = post.Title;
             _context.SaveChanges();
+
+            var tags = model.Tags.Split(',').ToList();
+            foreach (var tag in tags)
+            {
+                if (!_context.Tags.Any(t => string.Equals(t.Name, tag, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    _context.Tags.Add(new Tag()
+                    {
+                        Name = tag
+                    });
+                    _context.SaveChanges();
+                }
+            }
+
+            tags = tags.Select(t => t.ToLower()).ToList();
+            var tagsFromDb = _context.Tags.Where(t => tags.Contains(t.Name.ToLower())).ToList();
+
+            foreach (var tag in tagsFromDb)
+            {
+                if(_context.PostTags.Any(p=>p.PostId==_post.Id&&p.TagId==tag.Id)) continue;
+                _context.PostTags.Add(new PostTag()
+                {
+                    Tag = tag,
+                    Post = _post
+                });
+                _context.SaveChanges();
+            }
 
             return RedirectToAction("Details", new { id = post.Id });
         }
