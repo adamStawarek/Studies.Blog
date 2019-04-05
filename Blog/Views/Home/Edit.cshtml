@@ -8,7 +8,7 @@
 <h2 style="margin-top: 20px;">Edit post #@Model.Post.Id</h2>
 <hr />
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <form asp-action="Edit" onkeypress="return event.keyCode != 13;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Post.Id"/>
@@ -30,10 +30,15 @@
                     <div class="tags_dropdown"></div>
                 </div>
             </div>
+            <input id="image" type="hidden" asp-for="Post.Image"/>
             <div class="form-group">
                 <input type="submit" onclick="addTags()" value="Save" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+    <div class="col-md-4">
+        <img id="postImg" src="@Model.Post.Image.Replace("/200","/400")" />
+        <button id="btnChangePic" class="btn btn-primary" style="margin: 10px 10px 0 0;">Change picture</button>
     </div>
 </div>
 
@@ -41,6 +46,9 @@
 @section Scripts
     {
     <script>
+
+        var currentPic = Math.floor((Math.random() * 1084) + 1);
+
         $(document).ready(function () {
             $("#add_tag").on('keyup', function (e) {
                 if (e.keyCode == 13) {
@@ -48,10 +56,15 @@
                 }
             });
 
-
+            $("#btnChangePic").click(function(e) {
+                currentPic = Math.floor((Math.random() * 1084) + 1);
+                $('#postImg').attr("src", "https://picsum.photos/400/?image="+currentPic);
+            });
         });
+
         function addTags() {
             $('#modelTags').val($('#tagInput').val());
+            $('#image').val($('#postImg').attr("src"));
         }
 
         function getTags() {
@@ -76,5 +89,6 @@
                 addTags();
             }
         });
+
     </script>
 }
