@@ -55,7 +55,24 @@
             </div>
         </div>
     }
+        <div id="pagination" style="text-align: right">
+            @{
+                for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-primary" });
+                    }
+                    else
+                    {
+                        @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-default" });
+                    }
+                }
+            }
+        </div>
+    
 </div>
 <div class="col-md-3">   
     @await Html.PartialAsync("_NavigationPanel", @Model.Tags)
 </div>
+

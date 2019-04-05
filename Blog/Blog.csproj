@@ -16,6 +16,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+        <PackageReference Include="morelinq" Version="3.1.1" />
         <PackageReference Include="ThenInclude.EF6" Version="1.0.0.8" />
         <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet">
             <Version>2.0.0-*</Version>

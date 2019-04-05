@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using MoreLinq;
 using static System.String;
 
 namespace Blog.Controllers
@@ -17,12 +18,17 @@ namespace Blog.Controllers
             this._context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int currentPage=1)
         {
             var vm = new HomeViewModel()
             {
-                Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag).OrderByDescending(d=>d.Id).ToList(),
-                Tags = _context.Tags.ToList()
+                Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                    .Batch(4)
+                    .ElementAt(currentPage-1)
+                    .OrderByDescending(d=>d.Id).ToList(),
+                Tags = _context.Tags.ToList(),
+                CurrentPage = currentPage,
+                TotalPages =(int)Math.Ceiling(_context.Posts.Count()/4.0)
             };
             return View(vm);
         }
@@ -31,6 +37,11 @@ namespace Blog.Controllers
         {
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
             return View(post);
+        }
+
+        public IActionResult SwitchPage(int pageNo)
+        {
+            return RedirectToAction("Index", new { currentPage = pageNo });
         }
 
         [HttpPost]
