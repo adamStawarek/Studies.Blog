@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using static System.String;
 
 namespace Blog.Controllers
 {
@@ -18,22 +19,18 @@ namespace Blog.Controllers
 
         public IActionResult Index()
         {
-
             var vm = new HomeViewModel()
             {
-                Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag).ToList(),
+                Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag).OrderByDescending(d=>d.Id).ToList(),
                 Tags = _context.Tags.ToList()
             };
             return View(vm);
-
         }
 
         public IActionResult Details(int id)
         {
-
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
             return View(post);
-
         }
 
         [HttpPost]
@@ -46,7 +43,6 @@ namespace Blog.Controllers
             _context.Posts.Remove(post ?? throw new InvalidOperationException());
             _context.SaveChanges();
             return RedirectToAction("Index");
-
         }
 
         public IActionResult Edit(int? id)
@@ -58,7 +54,6 @@ namespace Blog.Controllers
             if (post == null)
                 return new BadRequestResult();
             return View(post);
-
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -82,27 +77,54 @@ namespace Blog.Controllers
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public IActionResult Create(Post model)
+        public IActionResult Create(CreatePostViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-
-            _context.Posts.Add(new Post()
+            var maxId = _context.Posts.Max(p => p.Id);
+            var post = model.Post;
+            var newPost = new Post()
             {
-                Title = model.Title,
-                Content = model.Content,
-                PostTags = model.PostTags,
+                Title = post.Title,
+                Content = post.Content,
+                PostTags = post.PostTags,
                 Author = "adam stawarek",
                 CreationTime = DateTime.Today,
                 LastEditTime = DateTime.Today,
-                Image = "https://picsum.photos/200/?image=1060",
+                Image = $"https://picsum.photos/200/?image={maxId%1085}",
                 Stars = 0
-            }
-            );
+            };
+            _context.Posts.Add(newPost);
             _context.SaveChanges();
+
+            var tags = model.Tags.Split(',').ToList();
+            foreach (var tag in tags)
+            {
+                if (!_context.Tags.Any(t => string.Equals(t.Name, tag, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    _context.Tags.Add(new Tag()
+                    {
+                        Name = tag
+                    });
+                    _context.SaveChanges();
+                }                   
+            }
+
+            tags = tags.Select(t => t.ToLower()).ToList();
+            var tagsFromDb = _context.Tags.Where(t => tags.Contains(t.Name.ToLower())).ToList();
+
+            foreach (var tag in tagsFromDb)
+            {
+                _context.PostTags.Add(new PostTag()
+                {
+                    Tag = tag,
+                    Post = newPost
+                });
+                _context.SaveChanges();
+            }
 
             return RedirectToAction("Index");
         }

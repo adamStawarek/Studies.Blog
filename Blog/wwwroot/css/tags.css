@@ -1,0 +1,45 @@
+﻿ #tags {
+     max-width: 600px;
+     border: 1px solid #cccccc7a;
+     padding: 5px;
+ }
+ #tags .tag {
+     position: relative;
+     display: block;
+     float: left;
+     color: #FFFFFF;
+     background: #8cce0c;
+     padding: 5px 20px 5px 5px;
+     margin: 4px;
+     border-radius: 2px;
+     font-size: 12px;
+     line-height: 12px;
+     font-family: "Lato Heavy";
+     transition: all 0.3s ease-in-out;
+ }
+ #tags .tag .close {
+     position: absolute;
+     top: 0;
+     right: 0;
+     width: 14px;
+     height: 100%;
+     background: #75ac0a;
+     cursor: pointer;
+     border-radius: 0 2px 2px 0;
+     transition: background 0.3s;
+ }
+ #tags .tag .close:after {
+     position: absolute;
+     content: "x";
+     font-weight: 900;
+ }
+ #tags .tag .close:hover {
+     background: rgba(215, 65, 70, 0.87);
+ }
+ #tags input {
+     border: 0;
+     margin: 4px;
+     padding: 3px 7px 3px 0;
+     width: auto;
+     outline: none;
+ }

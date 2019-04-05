@@ -1,28 +1,65 @@
-@model Post
+@model CreatePostViewModel
 
 @{
     Layout = "_Layout";
 }
 
+
+
 <h2 style="margin-top: 20px;">Create new post</h2>
 <hr />
 <div class="row">
     <div class="col-md-9">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>          
+        <form asp-action="Create" onkeypress="return event.keyCode != 13;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Post.Title" class="control-label"></label>
+                <input asp-for="Post.Title" class="form-control" />
+                <span asp-validation-for="Post.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <textarea asp-for="Content" class="form-control" style="min-height: 300px;"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>         
+                <label asp-for="Post.Content" class="control-label"></label>
+                <textarea asp-for="Post.Content" class="form-control" style="min-height: 300px;"></textarea>
+                <span asp-validation-for="Post.Content" class="text-danger"></span>
+            </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="Tags" class="control-label"></label>
+                <div id="tags">
+                    @Html.HiddenFor(m => m.Tags, new { id = "modelTags" })
+                    <input type="text" id="add_tag" placeholder="Add a tag......">
+                    <div class="tags_dropdown"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" onclick="addTags()" value="Create" class="btn btn-primary" />
             </div>
         </form>
+
     </div>
 </div>
+
+@section Scripts
+{  
+    <script>
+        $(document).ready(function () {                       
+            $("#add_tag").on('keyup', function (e) {
+                if (e.keyCode == 13) {
+                    addTags();
+                }
+            });          
+        });
+        function addTags() {
+            $('#modelTags').val($('#tagInput').val());
+        }
+        new inputTags({
+            asd: true,
+            id: 'add_tag',
+            tags: ['day review'],
+            maxTags: 20,
+            allowDuplicateTags: false,
+            onTagRemove: function (tag) {
+                addTags();
+            }
+        });
+    </script>
+}
