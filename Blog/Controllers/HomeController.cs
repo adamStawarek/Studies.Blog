@@ -103,9 +103,12 @@ namespace Blog.Controllers
             tags = tags.Select(t => t.ToLower()).ToList();
             var tagsFromDb = _context.Tags.Where(t => tags.Contains(t.Name.ToLower())).ToList();
 
+            var oldPostTags=_context.PostTags.Where(p => p.PostId == _post.Id).ToList();
+            _context.PostTags.RemoveRange(oldPostTags);
+            _context.SaveChanges();
+
             foreach (var tag in tagsFromDb)
             {
-                if(_context.PostTags.Any(p=>p.PostId==_post.Id&&p.TagId==tag.Id)) continue;
                 _context.PostTags.Add(new PostTag()
                 {
                     Tag = tag,
