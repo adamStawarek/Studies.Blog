@@ -37,7 +37,7 @@
         </form>
     </div>
     <div class="col-md-4">
-        <img id="postImg" src="@Model.Post.Image.Replace("/200","/400")" />
+        <img id="postImg" src="@Model.Post.Image.Replace("/200","/400")" onerror="changePic()" />
         <button id="btnChangePic" class="btn btn-primary" style="margin: 10px 10px 0 0;">Change picture</button>
     </div>
 </div>
@@ -57,10 +57,24 @@
             });
 
             $("#btnChangePic").click(function(e) {
-                currentPic = Math.floor((Math.random() * 1084) + 1);
-                $('#postImg').attr("src", "https://picsum.photos/400/?image="+currentPic);
+                changePic();
             });
+         
         });
+
+        function changePic() {
+            currentPic = Math.floor((Math.random() * 1084) + 1);
+            $('#postImg').attr("src", "https://picsum.photos/400/?image=" + currentPic);
+            console.log(currentPic);
+        }
+
+        function imageExists(url, callback) {
+            var img = new Image();
+            img.onload = function() { callback(true); };
+            img.onerror = function() { callback(false); };
+            img.src = url;
+        }
+
 
         function addTags() {
             $('#modelTags').val($('#tagInput').val());

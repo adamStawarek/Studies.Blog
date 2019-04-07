@@ -39,7 +39,7 @@
     </div>
 
     <div class="col-md-4">
-        <img id="postImg" src="https://picsum.photos/400/?image=1" />
+        <img id="postImg" onerror="changePic()"/>
         <button id="btnChangePic" class="btn btn-primary" style="margin: 10px 10px 0 0;">Change picture</button>
     </div>
 </div>
@@ -49,6 +49,8 @@
         var currentPic = Math.floor((Math.random() * 1084) + 1);
         $(document).ready(function () {
 
+            changePic();
+
             $("#add_tag").on('keyup', function (e) {
                 if (e.keyCode == 13) {
                     addTags();
@@ -56,10 +58,15 @@
             });
 
             $("#btnChangePic").click(function(e) {
-                currentPic = Math.floor((Math.random() * 1084) + 1);
-                $('#postImg').attr("src", "https://picsum.photos/400/?image="+currentPic);
+                changePic();
             });
         });
+
+        function changePic() {
+            currentPic = Math.floor((Math.random() * 1084) + 1);
+            $('#postImg').attr("src", "https://picsum.photos/400/?image=" + currentPic);
+            console.log(currentPic);
+        }
 
         function addTags() {
             $('#modelTags').val($('#tagInput').val());
