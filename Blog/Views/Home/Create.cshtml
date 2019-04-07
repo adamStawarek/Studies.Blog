@@ -30,8 +30,10 @@
                 </div>
             </div>
             <input id="image" type="hidden" asp-for="Post.Image"/>
+
             <div class="form-group">
-                <input type="submit" onclick="addTags()" value="Create" class="btn btn-primary" />
+                @Html.ActionLink("Cancel", "Index","Home", null, new { @class = "btn btn-danger" })
+                <input type="submit" onclick="addTags()" value="Create" class="btn btn-primary"/>
             </div>
 
 
