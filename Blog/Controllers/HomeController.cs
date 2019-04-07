@@ -34,6 +34,27 @@ namespace Blog.Controllers
             return View(vm);
         }
 
+        //[Microsoft.AspNetCore.Mvc.HttpGet]
+        //public IActionResult Index([FromQuery(Name = "search")] string searchString)
+        //{
+        //    if (String.IsNullOrEmpty(searchString))
+        //        return RedirectToAction("Index");
+
+        //    var vm = new HomeViewModel()
+        //    {
+        //        Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag)
+        //            .Where(p=>p.Title.ToLower().Contains(searchString.ToLower()))
+        //            .OrderByDescending(d => d.Id)
+        //            .Batch(4)
+        //            .ElementAt(currentPage - 1)
+        //            .ToList(),
+        //        Tags = _context.Tags.Take(10).ToList(),//TODO take only the most popular ones
+        //        CurrentPage = currentPage,
+        //        TotalPages = (int)Math.Ceiling(_context.Posts.Count() / 4.0)
+        //    };
+        //    return View(vm);
+        //}
+
         public IActionResult Details(int id)
         {
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
