@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MoreLinq;
-using static System.String;
 
 namespace Blog.Controllers
 {
@@ -27,33 +27,22 @@ namespace Blog.Controllers
                     .Batch(4)
                     .ElementAt(currentPage-1)
                     .ToList(),
-                Tags = _context.Tags.Take(10).ToList(),//TODO take only the most popular ones
+                Tags = GetPopularTags(10),
                 CurrentPage = currentPage,
                 TotalPages =(int)Math.Ceiling(_context.Posts.Count()/4.0)
             };
             return View(vm);
         }
 
-        //[Microsoft.AspNetCore.Mvc.HttpGet]
-        //public IActionResult Index([FromQuery(Name = "search")] string searchString)
-        //{
-        //    if (String.IsNullOrEmpty(searchString))
-        //        return RedirectToAction("Index");
-
-        //    var vm = new HomeViewModel()
-        //    {
-        //        Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag)
-        //            .Where(p=>p.Title.ToLower().Contains(searchString.ToLower()))
-        //            .OrderByDescending(d => d.Id)
-        //            .Batch(4)
-        //            .ElementAt(currentPage - 1)
-        //            .ToList(),
-        //        Tags = _context.Tags.Take(10).ToList(),//TODO take only the most popular ones
-        //        CurrentPage = currentPage,
-        //        TotalPages = (int)Math.Ceiling(_context.Posts.Count() / 4.0)
-        //    };
-        //    return View(vm);
-        //}
+        private List<Tag> GetPopularTags(int n)
+        {
+            var tags = _context.PostTags.GroupBy(p => p.Tag)
+                .Select(p => new {tag = p.Key, count = p.Count()})
+                .OrderByDescending(p => p.count)
+                .Select(p=>p.tag)
+                .Take(n).ToList();
+            return tags;
+        }
 
         public IActionResult Details(int id)
         {
