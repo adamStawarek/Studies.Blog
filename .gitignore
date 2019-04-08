@@ -7,3 +7,5 @@
 /Blog/bin/Debug/netcoreapp2.1
 /Blog/obj
 /Blog.sln.DotSettings.user
+/Blog.Tests.Integration/bin/Debug/netcoreapp2.1
+/Blog.Tests.Integration/obj
