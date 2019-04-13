@@ -2,7 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+        <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Scripts\file.ts" />
+      <None Remove="Scripts\Shared\Photos.ts" />
+      <None Remove="Scripts\Shared\Test.ts" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="bootstrap">
@@ -22,5 +29,27 @@
             <Version>2.0.0-*</Version>
         </DotNetCliToolReference>
     </ItemGroup>
+
+    <ItemGroup>
+      <TypeScriptCompile Include="Scripts\Pages\Home\file.ts" />
+      <TypeScriptCompile Include="Scripts\Shared\Test.ts" />
+      <TypeScriptCompile Include="Scripts\Shared\Photos.ts" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+      <TypeScriptTarget>ES5</TypeScriptTarget>
+      <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+      <TypeScriptModuleKind>None</TypeScriptModuleKind>
+      <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+      <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+      <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+      <TypeScriptOutFile />
+      <TypeScriptOutDir>C:\Users\adams\RiderProjects\Blog\Blog\wwwroot\js</TypeScriptOutDir>
+      <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+      <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+      <TypeScriptSourceMap>True</TypeScriptSourceMap>
+      <TypeScriptMapRoot />
+      <TypeScriptSourceRoot />
+    </PropertyGroup>
 
 </Project>
