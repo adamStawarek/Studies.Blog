@@ -11,7 +11,7 @@
     <div class="col-md-8">
         <form asp-action="Edit" onkeypress="return event.keyCode != 13;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Post.Id"/>
+            <input type="hidden" asp-for="Post.Id" />
             <div class="form-group">
                 <label asp-for="Post.Title" class="control-label"></label>
                 <input asp-for="Post.Title" class="form-control" />
@@ -30,10 +30,10 @@
                     <div class="tags_dropdown"></div>
                 </div>
             </div>
-            <input id="image" type="hidden" asp-for="Post.Image"/>
+            <input id="image" type="hidden" asp-for="Post.Image" />
             <div class="form-group">
-                @Html.ActionLink("Cancel", "Index","Home", null, new { @class = "btn btn-danger" })
-                <input type="submit" onclick="addTags()" value="Save" class="btn btn-primary"/>
+                @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-danger" })
+                <input type="submit" onclick="addTags()" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -47,59 +47,6 @@
 @section Scripts
     {
     <script>
-
-        var currentPic = Math.floor((Math.random() * 1084) + 1);
-
-        $(document).ready(function () {
-            $("#add_tag").on('keyup', function (e) {
-                if (e.keyCode == 13) {
-                    addTags();
-                }
-            });
-
-            $("#btnChangePic").click(function(e) {
-                changePic();
-            });
-
-            $("#postContent").on('keyup', function (e) {
-                if (e.keyCode == 13) {
-                    var newValue = $("#postContent").val() + "\n";
-                    $("#postContent").val(newValue);
-                }
-            });
-        });
-
-        function changePic() {
-            currentPic = Math.floor((Math.random() * 1084) + 1);
-            $('#postImg').attr("src", "https://picsum.photos/400/?image=" + currentPic);
-            console.log(currentPic);
-        }
-
-        function imageExists(url, callback) {
-            var img = new Image();
-            img.onload = function() { callback(true); };
-            img.onerror = function() { callback(false); };
-            img.src = url;
-        }
-
-
-        function addTags() {
-            $('#modelTags').val($('#tagInput').val());
-            $('#image').val($('#postImg').attr("src"));
-        }
-
-        function getTags() {
-            var myArray = [];
-
-            @foreach (var d in Model.Tags.Split(',').ToList())
-            {
-                @:myArray.push("@d");
-            }
-
-            console.log(myArray);
-            return myArray;
-        }
-
         new inputTags({
             asd: true,
             id: 'add_tag',
@@ -111,5 +58,14 @@
             }
         });
 
+        function getTags() {
+            var myArray = [];
+            @foreach(var d in Model.Tags.Split(',').ToList())
+            {
+                @: myArray.push("@d");
+            }
+            console.log(myArray);
+            return myArray;
+        }
     </script>
 }

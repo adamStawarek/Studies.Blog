@@ -5,7 +5,7 @@
     Layout = "_Layout";
 }
 <div class="col-md-9">
-  
+
     @foreach (var post in @Model.Posts)
     {
         <div class="well" style="@(Model.Posts.IndexOf(post) == 0 ? "margin-top: 20px;" : null)">
@@ -14,10 +14,11 @@
                     <img class="media-object" src="@post.Image">
                 </a>
                 <div class="media-body">
-                    <h4 class="media-heading">@Html.ActionLink(@post.Title, "Details", new {id = post.Id})</h4>
+                    <h4 class="media-heading">@Html.ActionLink(@post.Title, "Details", new { id = post.Id })</h4>
                     <p class="text-right">By @post.Author</p>
-                    <p>@string.Join(' ', @post.Content.Split().Take(50))
-                        @Html.ActionLink("...more", "Details", new {id = post.Id})
+                    <p>
+                        @string.Join(' ', @post.Content.Split().Take(50))
+                        @Html.ActionLink("...more", "Details", new { id = post.Id })
                     </p>
                     <ul class="list-inline list-unstyled">
                         <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
@@ -40,11 +41,13 @@
                         {
                             <span class=" label label-info">@tag.Tag.Name</span>
                         }
-                        @using (Html.BeginForm("Delete", "Home", new {@post.Id}, FormMethod.Post, null, new {style = "display:inline;"}))
+                        @using (Html.BeginForm("Delete", "Home", new { @post.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
                         {
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-danger"
-                                    style="float: right">Delete</button>
+                                    style="float: right">
+                                Delete
+                            </button>
                         }
 
                         @Html.ActionLink("Edit", "Edit", new {id = post.Id},
@@ -55,28 +58,28 @@
             </div>
         </div>
     }
-        <div id="pagination" style="text-align: right">
-            @{
-                for (int i = 1; i <= Model.TotalPages; i++)
+    <div id="pagination" style="text-align: right">
+        @{
+            for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == Model.CurrentPage)
                 {
-                    if (i == Model.CurrentPage)
-                    {
-                        @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-primary" });
-                    }
-                    else
-                    {
-                        @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-default" });
-                    }
+                    @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-primary" });
+                }
+                else
+                {
+                    @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-default" });
                 }
             }
-        </div>
-    
+        }
+    </div>
+
 </div>
-<div class="col-md-3">   
+<div class="col-md-3">
     @await Html.PartialAsync("_NavigationPanel", @Model.Tags)
 </div>
 
 @section Scripts
 {
-    <script src="js/Pages/Home/file.js"></script>
+    <script src="js/Home/Index.js"></script>
 }

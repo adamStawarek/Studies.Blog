@@ -7,8 +7,9 @@
 
     <ItemGroup>
       <None Remove="Scripts\file.ts" />
-      <None Remove="Scripts\Shared\Photos.ts" />
-      <None Remove="Scripts\Shared\Test.ts" />
+      <None Remove="Scripts\Pages\Home\Create.ts" />
+      <None Remove="Scripts\Pages\Home\Edit.ts" />
+      <None Remove="Scripts\Pages\Shared\Pexels.ts" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,9 +32,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <TypeScriptCompile Include="Scripts\Pages\Home\file.ts" />
-      <TypeScriptCompile Include="Scripts\Shared\Test.ts" />
-      <TypeScriptCompile Include="Scripts\Shared\Photos.ts" />
+      <TypeScriptCompile Include="Scripts\Pages\Home\Create.ts" />
+      <TypeScriptCompile Include="Scripts\Pages\Home\Edit.ts" />
+      <TypeScriptCompile Include="Scripts\Pages\Home\Index.ts" />
+      <TypeScriptCompile Include="Scripts\Pages\Shared\Pexels.ts" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -42,7 +44,7 @@
       <TypeScriptModuleKind>None</TypeScriptModuleKind>
       <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
       <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-      <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+      <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
       <TypeScriptOutFile />
       <TypeScriptOutDir>C:\Users\adams\RiderProjects\Blog\Blog\wwwroot\js</TypeScriptOutDir>
       <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
