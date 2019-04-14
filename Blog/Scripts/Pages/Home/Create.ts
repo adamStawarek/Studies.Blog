@@ -1,37 +1,27 @@
-﻿
-var currentPic = Math.floor((Math.random() * 1084) + 1);
-changePic();
+﻿var photoService = new PhotoService();
+var currentPhotoIndex = 0;
+var photos: Photo[] = [];
+var numberOfLoadedPhotos = 15;
 
-$("#add_tag").on('keyup',
-    function (e) {
+window.onload = () => {
+
+    setUpPhotos();
+
+    $("#add_tag").on('keyup', e => {
         if (e.keyCode == 13) {
-            addTags();
+            $('#modelTags').val($('#tagInput').val());
         }
     });
 
-$("#postContent").on('keyup',
-    function (e) {
-        if (e.keyCode == 13) {
-            var newValue = $("#postContent").val() + "\n";
-            $("#postContent").val(newValue);
-        }
+    $("#btnPrev").click(() => {
+        previousImage();
     });
 
-$("#btnChangePic").click(function (e) {
-    changePic();
-});
+    $("#btnNext").click(() => {
+        nextImage();
+    });
 
-function changePic() {
-    var photoService = new PhotoService();
-    var photo = photoService.getRandomPhoto();
-    var result = new PexelsResult();
-    $.extend(result, photo);
-    console.log(result);
-    console.log(result.photos[0].src.medium);
-    $('#postImg').attr("src", result.photos[0].src.medium);
-}
-
-function addTags() {
-    $('#modelTags').val($('#tagInput').val());
-    $('#image').val($('#postImg').attr("src"));
+    $("#btnKeyword").click(() => {
+        setUpPhotos();
+    });
 }

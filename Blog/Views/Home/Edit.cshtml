@@ -30,42 +30,55 @@
                     <div class="tags_dropdown"></div>
                 </div>
             </div>
-            <input id="image" type="hidden" asp-for="Post.Image" />
+            <input id="hiddenImg" type="hidden" asp-for="Post.Image" />
             <div class="form-group">
                 @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-danger" })
-                <input type="submit" onclick="addTags()" value="Save" class="btn btn-primary" />
+                <input type="submit" onclick="beforeSubmit();" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
     <div class="col-md-4">
-        <img id="postImg" src="@Model.Post.Image.Replace("/200","/400")" onerror="changePic()" />
-        <button id="btnChangePic" class="btn btn-primary" style="margin: 10px 10px 0 0;">Change picture</button>
+        <img id="displayedImg" src="@Model.Post.Image" />
+        <div class="row">
+            <button class="btn btn-primary col-xs-3" style="margin: 10px 10px 0 0;" id="btnPrev">Previous</button>
+            <button class="btn btn-primary col-xs-3" style="margin: 10px 10px 0 0;" id="btnNext">Next</button>
+            <span class="input-group col-xs-5" style="margin: 10px 10px 0 0;">
+                <input type="text" placeholder="keyword" id="keywordInput" class="form-control">
+                <span class="input-group-btn">
+                    <button id="btnKeyword" class="btn btn-default" type="button">
+                        <i>
+                            <span class="glyphicon glyphicon-search"></span>
+                        </i>
+                    </button>
+                </span>
+            </span>
+        </div>
     </div>
 </div>
 
-
 @section Scripts
-    {
+{
+    <script src="~/js/Shared/PexelHelper.js"></script>
+    <script src="~/js/Home/Edit.js"></script>
     <script>
+        function getTags() {
+            var myArray = [];
+            @foreach (var d in Model.Tags.Split(',').ToList())
+            {
+                @:myArray.push("@d");
+            }
+            return myArray;
+        }
+
         new inputTags({
             asd: true,
             id: 'add_tag',
             tags: getTags(),
             maxTags: 20,
             allowDuplicateTags: false,
-            onTagRemove: function (tag) {
-                addTags();
+            onTagRemove: function(tag) {
+                $('#modelTags').val($('#tagInput').val());
             }
         });
-
-        function getTags() {
-            var myArray = [];
-            @foreach(var d in Model.Tags.Split(',').ToList())
-            {
-                @: myArray.push("@d");
-            }
-            console.log(myArray);
-            return myArray;
-        }
     </script>
 }

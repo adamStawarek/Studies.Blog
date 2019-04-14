@@ -30,16 +30,30 @@ class Src {
 class PhotoService {
     protected apiKey: string = "563492ad6f917000010000014355d4b9487041c3b4b9062a0271c40a";
 
-    getRandomPhoto() {
+    getRandomPhotos(n: number) {
         var randomPhotoNumber = Math.floor((Math.random() * 1000) + 1);
         let apiKey = this.apiKey;
         return $.ajax({
-            url: "https://api.pexels.com/v1/search?query=berry&per_page=15&page=1",
+            url: "https://api.pexels.com/v1/curated?per_page=" + n + "&page=1",
             type: "GET",
             async: false,
-            beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', apiKey); },
+            beforeSend(xhr) { xhr.setRequestHeader('Authorization', apiKey); },
             dataType: "json",
-            success: function (data) {
+            success(data) {
+                return data;
+            }
+        }).responseJSON;
+    }
+
+    getPhotosByName(n: number,name: string) {
+        let apiKey = this.apiKey;
+        return $.ajax({
+            url:"https://api.pexels.com/v1/search?query="+name+"&per_page="+n+"&page=1",
+            type: "GET",
+            async: false,
+            beforeSend(xhr) { xhr.setRequestHeader('Authorization', apiKey); },
+            dataType: "json",
+            success(data) {
                 return data;
             }
         }).responseJSON;

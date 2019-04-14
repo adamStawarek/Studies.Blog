@@ -11,7 +11,7 @@
         <div class="well" style="@(Model.Posts.IndexOf(post) == 0 ? "margin-top: 20px;" : null)">
             <div class="media">
                 <a class="pull-left" href="#">
-                    <img class="media-object" src="@post.Image">
+                    <img class="media-object" src="@post.Image" style="max-width: 300px; max-height: 250px;">
                 </a>
                 <div class="media-body">
                     <h4 class="media-heading">@Html.ActionLink(@post.Title, "Details", new { id = post.Id })</h4>

@@ -94,7 +94,7 @@ namespace Blog.Controllers
             var _post = _context.Posts.FirstOrDefault(p => p.Id == post.Id);
             _post.Content = post.Content;
             _post.Title = post.Title;
-            _post.Image = post.Image.Replace("/400", "/200");//we need to change size of the image
+            _post.Image = post.Image;//we need to change size of the image
             _context.SaveChanges();
 
             var tags = model.Tags.Split(',').ToList();
@@ -153,7 +153,7 @@ namespace Blog.Controllers
                 Author = "adam stawarek",
                 CreationTime = DateTime.Today,
                 LastEditTime = DateTime.Today,
-                Image = post.Image.Replace("/400","/200"),//we need to change size of the image
+                Image = post.Image,
                 Stars = 0
             };
             _context.Posts.Add(newPost);

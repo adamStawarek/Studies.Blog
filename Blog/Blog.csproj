@@ -9,6 +9,7 @@
       <None Remove="Scripts\file.ts" />
       <None Remove="Scripts\Pages\Home\Create.ts" />
       <None Remove="Scripts\Pages\Home\Edit.ts" />
+      <None Remove="Scripts\Pages\Shared\PexelHelper.ts" />
       <None Remove="Scripts\Pages\Shared\Pexels.ts" />
     </ItemGroup>
 
@@ -35,6 +36,7 @@
       <TypeScriptCompile Include="Scripts\Pages\Home\Create.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Home\Edit.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Home\Index.ts" />
+      <TypeScriptCompile Include="Scripts\Pages\Shared\PexelHelper.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Shared\Pexels.ts" />
     </ItemGroup>
 
