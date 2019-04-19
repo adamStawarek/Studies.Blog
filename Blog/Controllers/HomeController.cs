@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
+using Blog.Helpers;
+using Google.Apis.Drive.v3;
 using MoreLinq;
 
 namespace Blog.Controllers
@@ -86,17 +89,75 @@ namespace Blog.Controllers
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public IActionResult Edit(CreatePostViewModel model)
+        public async Task<IActionResult> Edit(CreatePostViewModel model)
         {
             if (!ModelState.IsValid) return View();
 
-            var post = model.Post;
-            var _post = _context.Posts.FirstOrDefault(p => p.Id == post.Id);
-            _post.Content = post.Content;
-            _post.Title = post.Title;
-            _post.Image = post.Image;//we need to change size of the image
+            string imageUrl = await UploadImageAsync(model);
+
+            var post = _context.Posts.First(p => p.Id == model.Post.Id);
+            post.Content = model.Post.Content;
+            post.Title = model.Post.Title;
+            post.Image = imageUrl ?? model.Post.Image;
             _context.SaveChanges();
 
+            UpdateTags(model, post);
+
+            return RedirectToAction("Details", new { id = model.Post.Id });
+        }      
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreatePostViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            string imageUrl = await UploadImageAsync(model);
+
+            var post = model.Post;
+            var newPost = new Post()
+            {
+                Title = post.Title,
+                Content = post.Content,
+                PostTags = post.PostTags,
+                Author = "adam stawarek",
+                CreationTime = DateTime.Today,
+                LastEditTime = DateTime.Today,
+                Image = imageUrl ?? model.Post.Image,
+                Stars = 0
+            };
+            _context.Posts.Add(newPost);
+            _context.SaveChanges();
+
+            UpdateTags(model, newPost);
+
+            return RedirectToAction("Index");
+        }
+
+        private static async Task<string> UploadImageAsync(CreatePostViewModel model)
+        {
+            string imageUrl = null;
+            if (model.FormFile != null
+                && !model.Post.Image.StartsWith("https")
+                && !model.Post.Image.StartsWith("http"))
+            {
+                var fileId = await DriveApi.UploadFile(model.FormFile);
+                imageUrl = $"https://drive.google.com/uc?export=view&id={fileId}";
+            }
+
+            return imageUrl;
+        }
+
+        private void UpdateTags(CreatePostViewModel model, Post post)
+        {
             var tags = model.Tags.Split(',').ToList();
             foreach (var tag in tags)
             {
@@ -113,7 +174,7 @@ namespace Blog.Controllers
             tags = tags.Select(t => t.ToLower()).ToList();
             var tagsFromDb = _context.Tags.Where(t => tags.Contains(t.Name.ToLower())).ToList();
 
-            var oldPostTags=_context.PostTags.Where(p => p.PostId == _post.Id).ToList();
+            var oldPostTags = _context.PostTags.Where(p => p.PostId == post.Id).ToList();
             _context.PostTags.RemoveRange(oldPostTags);
             _context.SaveChanges();
 
@@ -122,70 +183,10 @@ namespace Blog.Controllers
                 _context.PostTags.Add(new PostTag()
                 {
                     Tag = tag,
-                    Post = _post
+                    Post = post
                 });
                 _context.SaveChanges();
             }
-
-            return RedirectToAction("Details", new { id = post.Id });
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public IActionResult Create(CreatePostViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-           
-            var post = model.Post;
-            var newPost = new Post()
-            {
-                Title = post.Title,
-                Content = post.Content,
-                PostTags = post.PostTags,
-                Author = "adam stawarek",
-                CreationTime = DateTime.Today,
-                LastEditTime = DateTime.Today,
-                Image = post.Image,
-                Stars = 0
-            };
-            _context.Posts.Add(newPost);
-            _context.SaveChanges();
-
-            var tags = model.Tags.Split(',').ToList();
-            foreach (var tag in tags)
-            {
-                if (!_context.Tags.Any(t => string.Equals(t.Name, tag, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    _context.Tags.Add(new Tag()
-                    {
-                        Name = tag
-                    });
-                    _context.SaveChanges();
-                }                   
-            }
-
-            tags = tags.Select(t => t.ToLower()).ToList();
-            var tagsFromDb = _context.Tags.Where(t => tags.Contains(t.Name.ToLower())).ToList();
-
-            foreach (var tag in tagsFromDb)
-            {
-                _context.PostTags.Add(new PostTag()
-                {
-                    Tag = tag,
-                    Post = newPost
-                });
-                _context.SaveChanges();
-            }
-
-            return RedirectToAction("Index");
         }
 
         #region error handling
