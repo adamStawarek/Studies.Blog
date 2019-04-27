@@ -8,16 +8,16 @@
 <div>
     <span>@Model.Author - @Model.LastEditTime.ToLongDateString()</span>
 </div>
-<hr/>
+<hr />
 <div class="row">
     <div class="col-md-9">
         <p style="float: left; margin-right: 10px; margin-top: 20px;">
             <img class="media-object" src="@Model.Image" style="max-width: 300px; max-height: 250px;">
         </p>
-        <span style="white-space: pre-line;">
-            @Model.Content
-        </span>
+
+        @Html.Raw(Model.Content)
+
     </div>
-    
+
 </div>
-<a asp-action="Index" asp-controller="Home" class="btn btn-primary" >Back</a>
+<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Back</a>

@@ -1,8 +1,10 @@
+@using System.Text.RegularExpressions
 @using Blog.Controllers
 @model HomeViewModel
 
 @{
     Layout = "_Layout";
+    
 }
 <div class="col-md-9">
 
@@ -17,7 +19,8 @@
                     <h4 class="media-heading">@Html.ActionLink(@post.Title, "Details", new { id = post.Id })</h4>
                     <p class="text-right">By @post.Author</p>
                     <p>
-                        @string.Join(' ', @post.Content.Split().Take(50))
+                        @Html.Raw(Regex.Matches(post.Content, "(\n|^).*?(?=\n|$)").Cast<Match>().FirstOrDefault())
+                        
                         @Html.ActionLink("...more", "Details", new { id = post.Id })
                     </p>
                     <ul class="list-inline list-unstyled">

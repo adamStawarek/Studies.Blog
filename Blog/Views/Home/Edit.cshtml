@@ -23,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Post.Content" class="control-label"></label>
-                <textarea asp-for="Post.Content" required class="form-control" style="min-height: 300px;"></textarea>
+                <textarea asp-for="Post.Content" class="form-control" style="min-height: 300px;"></textarea>
                 <span asp-validation-for="Post.Content" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -83,6 +83,21 @@
             onTagRemove: function(tag) {
                 $('#modelTags').val($('#tagInput').val());
             }
+        });
+
+        tinymce.init({
+            selector: 'textarea',
+            plugins: ['codesample', 'preview', 'advlist', 'autolink'],
+            codesample_languages: [
+                { text: 'HTML/XML', value: 'markup' },
+                { text: 'JavaScript', value: 'javascript' },
+                { text: 'CSS', value: 'css' },
+                { text: 'Python', value: 'python' },
+                { text: 'Java', value: 'java' },
+                { text: 'C', value: 'c' },
+                { text: 'C#', value: 'csharp' },
+                { text: 'C++', value: 'cpp' }
+            ]
         });
     </script>
 }
