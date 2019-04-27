@@ -1,7 +1,7 @@
 ﻿var photoService = new PhotoService();
 var currentPhotoIndex = 0;
 var photos: Photo[] = [];
-var numberOfLoadedPhotos = 15;
+var numberOfLoadedPhotos = 50;
 
 window.onload = () => {
 
