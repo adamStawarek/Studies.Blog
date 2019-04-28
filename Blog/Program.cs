@@ -1,21 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Blog.Helpers;
 using Blog.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 
 namespace Blog
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
+
+            var logDB = @"Server=DESKTOP-HC7DAS3\ADAMSQL;Database=Blog;Trusted_Connection=True;";
+            var logTable = "Logs";
+            var sink = new MSSqlServerSink(logDB, logTable, 1, TimeSpan.FromSeconds(1), null, true);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.ColoredConsole()
+                .WriteTo.Sink(sink)
+                .CreateLogger();
+
             var host = CreateWebHostBuilder(args).Build();
 
             using (var scope = host.Services.CreateScope())
@@ -25,11 +37,16 @@ namespace Blog
                 {
                     var context = services.GetRequiredService<BlogContext>();
                     BlogInitializer.Initialize(context);
+                    Log.Information("Starting web host");
                 }
                 catch (Exception ex)
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while seeding the database.");
+                    Log.Fatal("Host terminated unexpectedly");
+                    return;
+                }
+                finally
+                {
+                    Log.CloseAndFlush();
                 }
             }
 
@@ -38,6 +55,7 @@ namespace Blog
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSerilog();
     }
 }

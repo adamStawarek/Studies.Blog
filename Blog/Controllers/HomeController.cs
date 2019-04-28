@@ -7,8 +7,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Helpers;
-using Google.Apis.Drive.v3;
 using MoreLinq;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 
 namespace Blog.Controllers
 {
@@ -21,24 +23,54 @@ namespace Blog.Controllers
         public HomeController(BlogContext context)
         {
             this._context = context;
+            CreateLogger();
+        }
+
+        private void CreateLogger()
+        {
+            var logDB = @"Server=DESKTOP-HC7DAS3\ADAMSQL;Database=Blog;Trusted_Connection=True;";
+            var logTable = "Logs";
+            var sink = new MSSqlServerSink(logDB, logTable, 1, TimeSpan.FromSeconds(1), null, true);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.ColoredConsole()
+                .WriteTo.Sink(sink)
+                .CreateLogger();
         }
 
         public IActionResult Index(int currentPage=1, string searchWord="")
-        {
+        {                     
+            List<Post> posts = null;
+            int totalPages = 0;
+            try
+            {
+                posts = _context.Posts
+                    .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))
+                    .Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                    .OrderByDescending(d => d.Id)
+                    .Batch(4)
+                    .ElementAt(currentPage - 1)
+                    .ToList();
+                totalPages =
+                    (int) Math.Ceiling(_context.Posts.Count(p => p.Content.ToLower().Contains(searchWord.ToLower())) /
+                                       PostsPerPage);
+            }
+            catch 
+            {
+                Log.Warning($"No post contains '{searchWord}'");
+            }
+
             searchWord = searchWord ?? "";
             var vm = new HomeViewModel()
             {
                 SearchWord = searchWord,
-                Posts = _context.Posts
-                    .Where(p=>p.Content.ToLower().Contains(searchWord.ToLower()))
-                    .Include(p => p.PostTags).ThenInclude(p => p.Tag)
-                    .OrderByDescending(d => d.Id)
-                    .Batch(4)
-                    .ElementAt(currentPage-1)
-                    .ToList(),
+                Posts = posts??new List<Post>(),
                 Tags = GetPopularTags(MaxPopularTagsCount),
                 CurrentPage = currentPage,
-                TotalPages =(int)Math.Ceiling(_context.Posts.Count(p => p.Content.ToLower().Contains(searchWord.ToLower()))/PostsPerPage)
+                TotalPages =totalPages
             };
             return View(vm);
         }
