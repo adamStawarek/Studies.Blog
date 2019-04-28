@@ -1,11 +1,15 @@
 @using System.Text.RegularExpressions
-@using Blog.Controllers
 @model HomeViewModel
 
 @{
     Layout = "_Layout";
-    
 }
+
+@if (Model.SearchWord != "")
+{
+    <h2 class="text-primary">Search word: @Model.SearchWord</h2>   
+}
+
 <div class="col-md-9">
 
     @foreach (var post in @Model.Posts)
@@ -16,13 +20,33 @@
                     <img class="media-object" src="@post.Image" style="max-width: 300px; max-height: 250px;">
                 </a>
                 <div class="media-body">
-                    <h4 class="media-heading">@Html.ActionLink(@post.Title, "Details", new { id = post.Id })</h4>
+                    <h4 class="media-heading">@Html.ActionLink(post.Title, "Details", new { id = post.Id })</h4>
                     <p class="text-right">By @post.Author</p>
-                    <p>
-                        @Html.Raw(Regex.Matches(post.Content, "(\n|^).*?(?=\n|$)").Cast<Match>().FirstOrDefault())
-                        
+                    <div style="margin-bottom: 20px">
+                        @if (Model.SearchWord != "")
+                        {
+                            var countOfWordsBeforeSearchedWord = 10;
+                            var match = Regex.Matches(post.Content, "(\n|^).*?(?=\n|$)").Cast<Match>().FirstOrDefault(m => m.ToString().ToLower().Contains(Model.SearchWord.ToLower()));
+
+                            var searchWordWithIndex=match?.ToString().Split().Select((value, index) => new { value, index = index + 1 })
+                                .FirstOrDefault(s => s.ToString().ToLower().Contains(Model.SearchWord.ToLower()));
+
+                            var sentence=string.Join(' ',match?.ToString().Split()
+                                .Skip(searchWordWithIndex?.index -countOfWordsBeforeSearchedWord< 0 ? 0:searchWordWithIndex.index- countOfWordsBeforeSearchedWord)
+                                .Take(2* countOfWordsBeforeSearchedWord));
+
+                            @Html.Raw(sentence
+                                .Replace("<p", "<p style='display:inline;'")
+                                .Replace(searchWordWithIndex?.value, $"<span style='background-color: #FFFF00'>{searchWordWithIndex?.value}</span>"))
+                        }
+                        else
+                        {
+                            @Html.Raw(Regex.Matches(post.Content, "(\n|^).*?(?=\n|$)").Cast<Match>().FirstOrDefault()?.ToString().Replace("<p", "<p style='display:inline;'"))
+                        }
+
+
                         @Html.ActionLink("...more", "Details", new { id = post.Id })
-                    </p>
+                    </div>
                     <ul class="list-inline list-unstyled">
                         <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
                         <li>|</li>
@@ -67,11 +91,12 @@
             {
                 if (i == Model.CurrentPage)
                 {
-                    @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-primary" });
+
+                    @Html.ActionLink(i.ToString(), "Index", new { currentPage= i, searchWord=Model.SearchWord }, new { style = "margin-right: 5px;", @class = "btn btn-primary" });
                 }
                 else
                 {
-                    @Html.ActionLink(i.ToString(), "SwitchPage", new { pageNo = i }, new { style = "margin-right: 5px;", @class = "btn btn-default" });
+                    @Html.ActionLink(i.ToString(), "Index", new { currentPage = i, searchWord = Model.SearchWord }, new { style = "margin-right: 5px;", @class = "btn btn-default" });
                 }
             }
         }
@@ -79,7 +104,7 @@
 
 </div>
 <div class="col-md-3">
-    @await Html.PartialAsync("_NavigationPanel", @Model.Tags)
+    @await Html.PartialAsync("_NavigationPanel",new NavigationPanelViewModel(){Tags = Model.Tags,SearchWord = Model.SearchWord})
 </div>
 
 @section Scripts

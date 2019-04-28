@@ -14,6 +14,8 @@ namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
+        private const double PostsPerPage = 4.0;
+        private const int MaxPopularTagsCount = 10;
         private readonly BlogContext _context;
 
         public HomeController(BlogContext context)
@@ -21,18 +23,22 @@ namespace Blog.Controllers
             this._context = context;
         }
 
-        public IActionResult Index(int currentPage=1)
+        public IActionResult Index(int currentPage=1, string searchWord="")
         {
+            searchWord = searchWord ?? "";
             var vm = new HomeViewModel()
             {
-                Posts = _context.Posts.Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                SearchWord = searchWord,
+                Posts = _context.Posts
+                    .Where(p=>p.Content.ToLower().Contains(searchWord.ToLower()))
+                    .Include(p => p.PostTags).ThenInclude(p => p.Tag)
                     .OrderByDescending(d => d.Id)
                     .Batch(4)
                     .ElementAt(currentPage-1)
                     .ToList(),
-                Tags = GetPopularTags(10),
+                Tags = GetPopularTags(MaxPopularTagsCount),
                 CurrentPage = currentPage,
-                TotalPages =(int)Math.Ceiling(_context.Posts.Count()/4.0)
+                TotalPages =(int)Math.Ceiling(_context.Posts.Count(p => p.Content.ToLower().Contains(searchWord.ToLower()))/PostsPerPage)
             };
             return View(vm);
         }
@@ -52,11 +58,7 @@ namespace Blog.Controllers
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
             return View(post);
         }
-
-        public IActionResult SwitchPage(int pageNo)
-        {
-            return RedirectToAction("Index", new { currentPage = pageNo });
-        }
+   
 
         [HttpPost]
         public IActionResult Delete(int? id)

@@ -1,47 +1,49 @@
-@model List<Tag>
+@model NavigationPanelViewModel
 @{
     var firstHalfOfTags = new List<Tag>();
     var secondHalfOfTags = new List<Tag>();
-    for (var i = 0; i < @Model.Count; i++)
+    for (var i = 0; i < @Model.Tags.Count; i++)
     {
-        if (i < @Model.Count / 2)
+        if (i < @Model.Tags.Count / 2)
         {
-            firstHalfOfTags.Add(@Model[i]);
+            firstHalfOfTags.Add(@Model.Tags[i]);
         }
         else
         {
-            secondHalfOfTags.Add(@Model[i]);
+            secondHalfOfTags.Add(@Model.Tags[i]);
         }
     }
 }
-<div class="col-md-3" role="complementary">  
+<div class="col-md-3" role="complementary">
     <div class="well text-center" style="margin-top: 20px; width: 250px;">
         <h4>
             <span class="glyphicon glyphicon-pencil" style="margin-right: 5px;"></span>
             Create new post
         </h4>
-        @Html.ActionLink("Create", "Create", "Home", null, new {@class = "btn btn-primary"})
-    </div>
-    
-    <div class="well text-center" style="width: 250px;">
-        <h4>
-            <span class="glyphicon glyphicon-search" style="margin-right: 5px;"></span>
-            Blog Search...
-        </h4>
-        <div class="input-group">
-            <input type="text" class="form-control">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button">
-                    <i>
-                        <span class="glyphicon glyphicon-search"></span>
-                    </i>
-                </button>
-            </span>
-        </div>
+        @Html.ActionLink("Create", "Create", "Home", null, new { @class = "btn btn-primary" })
     </div>
 
+    <form method="get" asp-controller="Home" asp-action="Index">
+        <div class="well text-center" style="width: 250px;">
+            <h4>
+                <span class="glyphicon glyphicon-search" style="margin-right: 5px;"></span>
+                Blog Search...
+            </h4>
+            <div class="input-group">
+                <input type="text" asp-for="SearchWord" class="form-control">
+
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i>
+                            <span class="glyphicon glyphicon-search"></span>
+                        </i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </form>
     <div class="well text-center" style=" width: 250px;">
-        <h4>          
+        <h4>
             <span class="glyphicon glyphicon-tags" style="margin-right: 5px;"></span>
             Popular Tags:
         </h4>

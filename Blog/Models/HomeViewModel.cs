@@ -8,5 +8,6 @@ namespace Blog.Models
         public List<Tag> Tags { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+        public string SearchWord { get; set; }
     }
 }
