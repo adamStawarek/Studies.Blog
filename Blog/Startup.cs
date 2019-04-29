@@ -27,7 +27,8 @@ namespace Blog
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            
+
+            //TODO move connection string to appsettings.json
             var connection = @"Server=DESKTOP-HC7DAS3\ADAMSQL;Database=Blog;Trusted_Connection=True;";
             services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
 

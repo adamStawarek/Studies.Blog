@@ -14,7 +14,7 @@ namespace Blog.Models
         public string Author { get; set; }
         public int Stars { get; set; }
         public string Image { get; set; }
-        [DisplayName("Tags")]
+        [DisplayName("TagViewModels")]
         public List<PostTag> PostTags { get; set; } = new List<PostTag>();
     }
 }

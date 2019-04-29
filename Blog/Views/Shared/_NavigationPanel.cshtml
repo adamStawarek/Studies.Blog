@@ -1,16 +1,17 @@
-@model NavigationPanelViewModel
+@using Blog.Models.ViewModels
+@model Blog.Models.ViewModels.NavigationPanelViewModel
 @{
-    var firstHalfOfTags = new List<Tag>();
-    var secondHalfOfTags = new List<Tag>();
-    for (var i = 0; i < @Model.Tags.Count; i++)
+    var firstHalfOfTags = new List<TagViewModel>();
+    var secondHalfOfTags = new List<TagViewModel>();
+    for (var i = 0; i < @Model.TagViewModels.Count; i++)
     {
-        if (i < @Model.Tags.Count / 2)
+        if (i < @Model.TagViewModels.Count / 2)
         {
-            firstHalfOfTags.Add(@Model.Tags[i]);
+            firstHalfOfTags.Add(Model.TagViewModels[i]);
         }
         else
         {
-            secondHalfOfTags.Add(@Model.Tags[i]);
+            secondHalfOfTags.Add(Model.TagViewModels[i]);
         }
     }
 }
@@ -42,20 +43,20 @@
             </div>
         </div>
     </form>
+
     <div class="well text-center" style=" width: 250px;">
         <h4>
             <span class="glyphicon glyphicon-tags" style="margin-right: 5px;"></span>
             Popular Tags:
         </h4>
+
         <div class="row">
             <div class="col-lg-6">
                 <ul class="list-unstyled">
                     @foreach (var tag in firstHalfOfTags)
                     {
                         <li>
-                            <a href="">
-                                <span class="badge">@tag.Name</span>
-                            </a>
+                            <span class="@(tag.IsSelected ? "badge btn activeTag" : "badge btn")" id="@tag.Tag.Id">@tag.Tag.Name</span>
                         </li>
                     }
                 </ul>
@@ -65,13 +66,15 @@
                     @foreach (var tag in secondHalfOfTags)
                     {
                         <li>
-                            <a href="">
-                                <span class="badge">@tag.Name</span>
-                            </a>
+                            <span class="@(tag.IsSelected ? "badge btn activeTag" : "badge btn")" id="@tag.Tag.Id">@tag.Tag.Name</span>
                         </li>
                     }
                 </ul>
             </div>
         </div>
+        <div class="row">
+            <button class="btn btn-primary" onclick="beforeSubmitTag()">Search</button>
+        </div>
     </div>
+
 </div>

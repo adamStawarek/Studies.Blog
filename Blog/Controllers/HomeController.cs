@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Helpers;
+using Blog.Models.ViewModels;
 using MoreLinq;
 using Serilog;
 using Serilog.Events;
@@ -28,6 +29,7 @@ namespace Blog.Controllers
 
         private void CreateLogger()
         {
+            //TODO move connection string to appsettings.json
             var logDB = @"Server=DESKTOP-HC7DAS3\ADAMSQL;Database=Blog;Trusted_Connection=True;";
             var logTable = "Logs";
             var sink = new MSSqlServerSink(logDB, logTable, 1, TimeSpan.FromSeconds(1), null, true);
@@ -41,22 +43,47 @@ namespace Blog.Controllers
                 .CreateLogger();
         }
 
-        public IActionResult Index(int currentPage=1, string searchWord="")
+        public IActionResult Index(int currentPage=1, string searchWord="",List<int> tagIds=null)
         {                     
             List<Post> posts = null;
             int totalPages = 0;
+            List<TagViewModel> tagVms = null;
+
             try
             {
-                posts = _context.Posts
-                    .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))
-                    .Include(p => p.PostTags).ThenInclude(p => p.Tag)
-                    .OrderByDescending(d => d.Id)
-                    .Batch(4)
-                    .ElementAt(currentPage - 1)
-                    .ToList();
-                totalPages =
-                    (int) Math.Ceiling(_context.Posts.Count(p => p.Content.ToLower().Contains(searchWord.ToLower())) /
-                                       PostsPerPage);
+                if (tagIds!=null&&tagIds.Count>0)
+                {
+                    posts = _context.Posts
+                                .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))
+                                .Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                                .Where(p => p.PostTags.Any(t => tagIds.Contains(t.TagId)))
+                                .OrderByDescending(d => d.Id)
+                                .Batch(4)
+                                .ElementAt(currentPage - 1)
+                                .ToList();
+
+                   totalPages = (int)Math.Ceiling(_context.Posts.Count(p => 
+                        p.Content.ToLower().Contains(searchWord.ToLower())
+                        && p.PostTags.Any(t=>tagIds.Contains(t.TagId))) / PostsPerPage);
+
+                    tagVms = GetPopularTags(MaxPopularTagsCount).Select(t => new TagViewModel()
+                        {Tag = t, IsSelected = tagIds.Contains(t.Id)}).ToList();
+                }
+                else
+                {
+                    posts = _context.Posts
+                        .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))
+                        .Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                        .OrderByDescending(d => d.Id)
+                        .Batch(4)
+                        .ElementAt(currentPage - 1)
+                        .ToList();
+
+                    totalPages = (int)Math.Ceiling(_context.Posts.Count(p =>
+                        p.Content.ToLower().Contains(searchWord.ToLower())) / PostsPerPage);
+
+                    tagVms = GetPopularTags(MaxPopularTagsCount).Select(t => new TagViewModel() {Tag = t}).ToList();
+                }             
             }
             catch 
             {
@@ -68,11 +95,24 @@ namespace Blog.Controllers
             {
                 SearchWord = searchWord,
                 Posts = posts??new List<Post>(),
-                Tags = GetPopularTags(MaxPopularTagsCount),
+                TagViewModels =tagVms,
                 CurrentPage = currentPage,
                 TotalPages =totalPages
             };
             return View(vm);
+        }
+
+        public ActionResult SearchByTags(List<int> ids)
+        {
+            try
+            {
+                return Json(new { ok = true, newurl = Url.Action("Index","Home",new {tagIds=ids}) });
+            }
+            catch (Exception ex)
+            {
+                Log.Write(LogEventLevel.Error,ex,"Cannot redirect with ajax");
+                return Json(new { ok = false, message = ex.Message });
+            }
         }
 
         private List<Tag> GetPopularTags(int n)
@@ -89,8 +129,7 @@ namespace Blog.Controllers
         {
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
             return View(post);
-        }
-   
+        }  
 
         [HttpPost]
         public IActionResult Delete(int? id)

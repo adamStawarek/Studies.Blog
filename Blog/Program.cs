@@ -15,7 +15,7 @@ namespace Blog
 
         public static void Main(string[] args)
         {
-
+            //TODO move connection string to appsettings.json
             var logDB = @"Server=DESKTOP-HC7DAS3\ADAMSQL;Database=Blog;Trusted_Connection=True;";
             var logTable = "Logs";
             var sink = new MSSqlServerSink(logDB, logTable, 1, TimeSpan.FromSeconds(1), null, true);

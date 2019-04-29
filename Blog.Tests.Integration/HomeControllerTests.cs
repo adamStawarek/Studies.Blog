@@ -1,8 +1,6 @@
-
-using System;
-using System.Collections.Generic;
 using Blog.Controllers;
 using Blog.Models;
+using Blog.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;

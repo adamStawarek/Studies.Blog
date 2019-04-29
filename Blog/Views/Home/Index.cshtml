@@ -1,5 +1,6 @@
 @using System.Text.RegularExpressions
-@model HomeViewModel
+@using Blog.Models.ViewModels
+@model Blog.Models.ViewModels.HomeViewModel
 
 @{
     Layout = "_Layout";
@@ -7,7 +8,14 @@
 
 @if (Model.SearchWord != "")
 {
-    <h2 class="text-primary">Search word: @Model.SearchWord</h2>   
+    <h2 class="text-primary">Search word: @Model.SearchWord</h2>
+}
+
+@if (Model.TagViewModels.Any(t => t.IsSelected))
+{
+    <h2 class="text-primary">
+        Selected tags: @string.Join(' ',Model.TagViewModels.Where(t => t.IsSelected).Select(t=>t.Tag.Name))       
+    </h2>
 }
 
 <div class="col-md-9">
@@ -28,12 +36,12 @@
                             var countOfWordsBeforeSearchedWord = 10;
                             var match = Regex.Matches(post.Content, "(\n|^).*?(?=\n|$)").Cast<Match>().FirstOrDefault(m => m.ToString().ToLower().Contains(Model.SearchWord.ToLower()));
 
-                            var searchWordWithIndex=match?.ToString().Split().Select((value, index) => new { value, index = index + 1 })
+                            var searchWordWithIndex = match?.ToString().Split().Select((value, index) => new { value, index = index + 1 })
                                 .FirstOrDefault(s => s.ToString().ToLower().Contains(Model.SearchWord.ToLower()));
 
-                            var sentence=string.Join(' ',match?.ToString().Split()
-                                .Skip(searchWordWithIndex?.index -countOfWordsBeforeSearchedWord< 0 ? 0:searchWordWithIndex.index- countOfWordsBeforeSearchedWord)
-                                .Take(2* countOfWordsBeforeSearchedWord));
+                            var sentence = string.Join(' ', match?.ToString().Split()
+                                .Skip(searchWordWithIndex?.index - countOfWordsBeforeSearchedWord < 0 ? 0 : searchWordWithIndex.index - countOfWordsBeforeSearchedWord)
+                                .Take(2 * countOfWordsBeforeSearchedWord));
 
                             @Html.Raw(sentence
                                 .Replace("<p", "<p style='display:inline;'")
@@ -92,11 +100,15 @@
                 if (i == Model.CurrentPage)
                 {
 
-                    @Html.ActionLink(i.ToString(), "Index", new { currentPage= i, searchWord=Model.SearchWord }, new { style = "margin-right: 5px;", @class = "btn btn-primary" });
+                    @Html.ActionLink(i.ToString(), "Index"
+                        , new { currentPage= i, searchWord=Model.SearchWord,tagIds = Model.TagViewModels.Where(t=>t.IsSelected).Select(t=>t.Tag.Id).ToList() }
+                        , new { style = "margin-right: 5px;", @class = "btn btn-primary" });
                 }
                 else
                 {
-                    @Html.ActionLink(i.ToString(), "Index", new { currentPage = i, searchWord = Model.SearchWord }, new { style = "margin-right: 5px;", @class = "btn btn-default" });
+                    @Html.ActionLink(i.ToString(), "Index"
+                        , new { currentPage = i, searchWord = Model.SearchWord, tagIds = Model.TagViewModels.Where(t => t.IsSelected).Select(t => t.Tag.Id).ToList() }
+                        , new { style = "margin-right: 5px;", @class = "btn btn-default" });
                 }
             }
         }
@@ -104,10 +116,10 @@
 
 </div>
 <div class="col-md-3">
-    @await Html.PartialAsync("_NavigationPanel",new NavigationPanelViewModel(){Tags = Model.Tags,SearchWord = Model.SearchWord})
+    @await Html.PartialAsync("_NavigationPanel", new NavigationPanelViewModel() { TagViewModels = Model.TagViewModels, SearchWord = Model.SearchWord })
 </div>
 
 @section Scripts
-{
-    <script src="js/Home/Index.js"></script>
+    {
+    <script src="~/js/Home/Index.js"></script>
 }

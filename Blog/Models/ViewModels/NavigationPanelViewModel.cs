@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Blog.Models
+namespace Blog.Models.ViewModels
 {
     public class NavigationPanelViewModel
     {
-        public List<Tag> Tags { get; set; }
+        public List<TagViewModel> TagViewModels { get; set; }
         public string SearchWord { get; set; }
     }
 }
