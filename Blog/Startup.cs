@@ -1,4 +1,6 @@
-﻿using Blog.Models;
+﻿using System.Security.Claims;
+using Blog.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -50,6 +52,7 @@ namespace Blog
                     options.GetClaimsFromUserInfoEndpoint = true;
                     options.Scope.Add("openid");
                     options.Scope.Add("profile");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.Role, "groups");
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = "name"
@@ -57,7 +60,7 @@ namespace Blog
                 });
 
             //TODO move connection string to appsettings.json
-            var connection = @"Server=DESKTOP-HC7DAS3\ADAMSQL;Database=Blog;Trusted_Connection=True;";
+            var connection = Configuration["connectionString"];
             services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

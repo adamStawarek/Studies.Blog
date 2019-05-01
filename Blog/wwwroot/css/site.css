@@ -40,3 +40,7 @@ body {
 .activeTag {
     background: dodgerblue;
 }
+
+#navWrapper > :first-child {
+    margin-top: 20px;
+}

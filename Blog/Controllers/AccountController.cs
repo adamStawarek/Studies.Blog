@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
 using Okta.AspNetCore;
 using Okta.Sdk;
 
@@ -16,7 +17,7 @@ namespace Blog.Controllers
         }
 
         public IActionResult Login()
-        {
+        {            
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Challenge(OpenIdConnectDefaults.AuthenticationScheme);

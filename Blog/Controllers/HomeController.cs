@@ -144,6 +144,7 @@ namespace Blog.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admins")]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -178,9 +179,9 @@ namespace Blog.Controllers
             UpdateTags(model, post);
 
             return RedirectToAction("Details", new { id = model.Post.Id });
-        }      
+        }
 
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         public IActionResult Create()
         {
             return View();
@@ -190,6 +191,7 @@ namespace Blog.Controllers
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePostViewModel model)
         {
+           
             if (!ModelState.IsValid)
             {
                 return View();
@@ -203,7 +205,7 @@ namespace Blog.Controllers
                 Title = post.Title,
                 Content = post.Content,
                 PostTags = post.PostTags,
-                Author = "adam stawarek",
+                Author = HttpContext.User.Identity.Name,
                 CreationTime = DateTime.Today,
                 LastEditTime = DateTime.Today,
                 Image = imageUrl ?? model.Post.Image,

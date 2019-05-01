@@ -72,21 +72,28 @@
                         </li>
                     </ul>
                     <div class="media-bottom">
+
                         @foreach (var tag in @post.PostTags)
                         {
                             <span class=" label label-info">@tag.Tag.Name</span>
                         }
-                        @using (Html.BeginForm("Delete", "Home", new { @post.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admins"))
                         {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-danger"
-                                    style="float: right">
-                                Delete
-                            </button>
+
+                            using (Html.BeginForm("Delete", "Home", new {@post.Id}, FormMethod.Post, null, new {style = "display:inline;"}))
+                             {
+                                 @Html.AntiForgeryToken()
+                                 <button type="submit" class="btn btn-danger"
+                                         style="float: right">
+                                     Delete
+                                 </button>
+                             }
+
+                            @Html.ActionLink("Edit", "Edit", new {id = post.Id},
+                                new {@class = "btn btn-primary", @style = "float:right;margin-right:10px;"})
                         }
 
-                        @Html.ActionLink("Edit", "Edit", new {id = post.Id},
-                            new {@class = "btn btn-primary", @style = "float:right;margin-right:10px;"})
                     </div>
                 </div>
 

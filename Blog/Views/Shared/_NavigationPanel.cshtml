@@ -1,5 +1,7 @@
 @using Blog.Models.ViewModels
+
 @model Blog.Models.ViewModels.NavigationPanelViewModel
+
 @{
     var firstHalfOfTags = new List<TagViewModel>();
     var secondHalfOfTags = new List<TagViewModel>();
@@ -15,15 +17,18 @@
         }
     }
 }
-<div class="col-md-3" role="complementary">
-    <div class="well text-center" style="margin-top: 20px; width: 250px;">
-        <h4>
-            <span class="glyphicon glyphicon-pencil" style="margin-right: 5px;"></span>
-            Create new post
-        </h4>
-        @Html.ActionLink("Create", "Create", "Home", null, new { @class = "btn btn-primary" })
-    </div>
+<div class="col-md-3" role="complementary" id="navWrapper">
 
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admins"))
+    {
+        <div class="well text-center" style="width: 250px;">
+            <h4>
+                <span class="glyphicon glyphicon-pencil" style="margin-right: 5px;"></span>
+                Create new post
+            </h4>
+            @Html.ActionLink("Create", "Create", "Home", null, new { @class = "btn btn-primary" })
+        </div>
+    }
     <form method="get" asp-controller="Home" asp-action="Index">
         <div class="well text-center" style="width: 250px;">
             <h4>
@@ -44,7 +49,7 @@
         </div>
     </form>
 
-    <div class="well text-center" style=" width: 250px;">
+    <div class="well text-center" style="width: 250px;">
         <h4>
             <span class="glyphicon glyphicon-tags" style="margin-right: 5px;"></span>
             Popular Tags:
