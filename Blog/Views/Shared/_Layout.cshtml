@@ -29,7 +29,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Blog</a>
+                <a asp-area="" asp-controller="Home" id="lnkHome" asp-action="Index" class="navbar-brand">Blog</a>
             </div>
             <div class="navbar-collapse collapse" id="navMenu">
                 @if (User.Identity.IsAuthenticated)
@@ -38,7 +38,7 @@
                         <li><p class="navbar-text">Hello, @User.Identity.Name</p></li>
                         <li>
                             <form asp-controller="Account" asp-action="Logout" method="post">
-                                <button type="submit" class="btn btn-link" style="margin-top: 7px">Logout</button>
+                                <button type="submit" class="btn btn-link" id="lnkLogout" style="margin-top: 7px">Logout</button>
                             </form>
                         </li>
                     </ul>
@@ -46,7 +46,7 @@
                 else
                 {
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a asp-controller="Account" asp-action="Login">Log in</a></li>
+                        <li><a asp-controller="Account" asp-action="Login" id="lnkLogin">Log in</a></li>
                     </ul>
                 }
             </div>

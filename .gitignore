@@ -15,3 +15,6 @@
 /Blog.Tests.Integration/bin/Debug/netcoreapp2.1
 /Blog/token.json/Google.Apis.Auth.OAuth2.Responses.TokenResponse-user
 /Blog/appsettings.json
+/Blog.Tests.Ui/bin/Debug/netcoreapp2.1
+/Blog.Tests.Ui/obj
+/Blog.Tests.Ui/testsettings.json
