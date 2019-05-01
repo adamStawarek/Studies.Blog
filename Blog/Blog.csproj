@@ -25,9 +25,39 @@
         </PackageReference>
         <PackageReference Include="Google.Apis.Auth" Version="1.38.2" />
         <PackageReference Include="Google.Apis.Drive.v3" Version="1.38.2.1566" />
+        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Cryptography.Internal" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
         <PackageReference Include="morelinq" Version="3.1.1" />
+        <PackageReference Include="Okta.AspNetCore" Version="1.1.5" />
+        <PackageReference Include="Okta.Sdk" Version="1.2.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
         <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />

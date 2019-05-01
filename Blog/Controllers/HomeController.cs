@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blog.Helpers;
 using Blog.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using MoreLinq;
 using Serilog;
 using Serilog.Events;
@@ -179,6 +180,7 @@ namespace Blog.Controllers
             return RedirectToAction("Details", new { id = model.Post.Id });
         }      
 
+        [Authorize]
         public IActionResult Create()
         {
             return View();

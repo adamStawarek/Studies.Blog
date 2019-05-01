@@ -14,3 +14,4 @@
 /Blog/DriveApiConfig.txt
 /Blog.Tests.Integration/bin/Debug/netcoreapp2.1
 /Blog/token.json/Google.Apis.Auth.OAuth2.Responses.TokenResponse-user
+/Blog/appsettings.json

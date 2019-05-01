@@ -5,7 +5,12 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog", "Blog\Blog.csproj", "{A3C91F1E-F831-450D-8A16-32FB6A26F70D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Tests.Integration", "Blog.Tests.Integration\Blog.Tests.Integration.csproj", "{3009E5AE-1FCD-4656-997D-F1131C583103}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog.Tests.Integration", "Blog.Tests.Integration\Blog.Tests.Integration.csproj", "{3009E5AE-1FCD-4656-997D-F1131C583103}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7810E7B2-8C80-493A-B336-5835C51D5218}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
