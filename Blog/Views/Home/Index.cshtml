@@ -14,7 +14,7 @@
 @if (Model.TagViewModels.Any(t => t.IsSelected))
 {
     <h2 class="text-primary">
-        Selected tags: @string.Join(' ',Model.TagViewModels.Where(t => t.IsSelected).Select(t=>t.Tag.Name))       
+        Selected tags: @string.Join(' ',Model.TagViewModels.Where(t => t.IsSelected).Select(t=>"#"+t.Tag.Name))       
     </h2>
 }
 

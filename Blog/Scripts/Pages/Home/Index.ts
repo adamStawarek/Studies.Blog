@@ -23,7 +23,7 @@ window.onload = () => {
 
 function beforeSubmitTag() {
     
-    var url = "Home//SearchByTags?";
+    var url = "Home/SearchByTags?";
     selectedTags.forEach((el) => {
         url+="ids="+el.toString()+"&";
     });
