@@ -72,8 +72,9 @@ namespace Blog.Controllers
                 }
                 else
                 {
+                    var word = searchWord.ToLower();
                     posts = _context.Posts
-                        .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))
+                        .Where(p => p.Content==null || p.Content.ToLower().Contains(word))
                         .Include(p => p.PostTags).ThenInclude(p => p.Tag)
                         .OrderByDescending(d => d.Id)
                         .Batch(4)
@@ -81,7 +82,7 @@ namespace Blog.Controllers
                         .ToList();
 
                     totalPages = (int)Math.Ceiling(_context.Posts.Count(p =>
-                        p.Content.ToLower().Contains(searchWord.ToLower())) / PostsPerPage);
+                        p.Content == null || p.Content.ToLower().Contains(word)) / PostsPerPage);
 
                     tagVms = GetPopularTags(MaxPopularTagsCount).Select(t => new TagViewModel() {Tag = t}).ToList();
                 }             
