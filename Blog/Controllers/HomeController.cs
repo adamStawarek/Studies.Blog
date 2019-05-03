@@ -128,11 +128,12 @@ namespace Blog.Controllers
 
         public IActionResult Details(int id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _context.Posts.Include(p=>p.Comments).FirstOrDefault(p => p.Id == id);
             return View(post);
         }  
 
         [HttpPost]
+        [Authorize(Roles = "Admins")]
         public IActionResult Delete(int? id)
         {
             if (id == null)

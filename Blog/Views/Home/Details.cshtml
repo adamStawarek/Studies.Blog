@@ -16,8 +16,19 @@
         </p>
 
         @Html.Raw(Model.Content)
-
     </div>
 
 </div>
+<hr/>
+<section>
+    <h3 class="text-primary">@Model.Comments.Count Comments</h3>
+    <div id="commentSection"></div>    
+</section>
 <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Back</a>
+@section Scripts
+{
+    <script src="~/js/Home/Details.js"></script>
+    <script>
+        createCommentTemplate('@Html.Raw(Model.Id)');
+    </script>
+}

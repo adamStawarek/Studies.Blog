@@ -16,5 +16,7 @@ namespace Blog.Models
         public string Image { get; set; }
         [DisplayName("TagViewModels")]
         public List<PostTag> PostTags { get; set; } = new List<PostTag>();
+
+        public List<Comment> Comments { get; set; }=new List<Comment>();
     }
 }

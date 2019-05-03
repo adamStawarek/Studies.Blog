@@ -81,7 +81,7 @@ namespace Blog
 
             app.UseAuthentication();
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection();//comment when use ngrok
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
