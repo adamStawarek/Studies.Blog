@@ -37,7 +37,7 @@ function createCommentTemplate(id: number) {
     console.log(comments);
     var html: string = '';
     comments.forEach((c) => {
-        html += '<div class="row">' +
+        html += '<div class="row comment">' +
             '<div class="col-sm-1">' +
                 '<div class="thumbnail">' +
                     '<img class="img-responsive" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">'+
