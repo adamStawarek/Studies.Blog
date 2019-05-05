@@ -34,7 +34,7 @@
             </div>
             <input id="hiddenImg" type="hidden" asp-for="Post.Image" />
             <div class="form-group">
-                @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-danger" })
+                <input type="button" onclick="history.go(-1)" class="btn btn-danger" value="Cancel" />
                 <input type="submit" onclick="beforeSubmit()" value="Create" class="btn btn-primary" />
             </div>
 

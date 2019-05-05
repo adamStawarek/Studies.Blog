@@ -57,9 +57,14 @@
                     </div>
                     <ul class="list-inline list-unstyled">
                         <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
-                        <li>|</li>
-                        <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
-                        <li>|</li>
+
+                        @if (post.Comments.Count > 0)
+                        {
+                            <li>|</li>
+                            <span><i class="glyphicon glyphicon-comment"></i> @post.Comments.Count comments</span>
+                            <li>|</li>
+                        }
+
                         <li>
                             @for (int j = 0; j < @post.Stars; j++)
                             {

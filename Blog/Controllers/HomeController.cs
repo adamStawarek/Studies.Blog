@@ -55,8 +55,9 @@ namespace Blog.Controllers
                 if (tagIds!=null&&tagIds.Count>0)
                 {
                     posts = _context.Posts
-                                .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))
+                                .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))                                
                                 .Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                                .Include(p => p.Comments)
                                 .Where(p => p.PostTags.Any(t => tagIds.Contains(t.TagId)))
                                 .OrderByDescending(d => d.Id)
                                 .Batch(4)
@@ -76,6 +77,7 @@ namespace Blog.Controllers
                     posts = _context.Posts
                         .Where(p => p.Content==null || p.Content.ToLower().Contains(word))
                         .Include(p => p.PostTags).ThenInclude(p => p.Tag)
+                        .Include(p => p.Comments)
                         .OrderByDescending(d => d.Id)
                         .Batch(4)
                         .ElementAt(currentPage - 1)
