@@ -143,7 +143,8 @@ namespace Blog.Controllers
             var post = _context.Posts.FirstOrDefault(p => p.Id == id);
             _context.Posts.Remove(post ?? throw new InvalidOperationException());
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            string prevUrl = Request.Headers["Referer"].ToString();
+            return Redirect(prevUrl);
         }
 
         [Authorize(Roles = "Admins")]
@@ -219,6 +220,21 @@ namespace Blog.Controllers
             UpdateTags(model, newPost);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddComment(string content,int? postId)
+        {
+            if (postId == null) return new BadRequestResult();
+            var comment=new Comment()
+            {
+                AuthorId = 1,AuthorName = User.Identity.Name,Content = content,CreationTime = DateTime.Now,LastEditTime = DateTime.Now,
+                PostId = (int)postId,State = State.WaitingForApproval
+            };
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details","Home",new {id=postId});
         }
 
         private static async Task<string> UploadImageAsync(CreatePostViewModel model)

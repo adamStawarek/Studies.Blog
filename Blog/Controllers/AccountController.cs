@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
-using MoreLinq;
-using Okta.AspNetCore;
 using Okta.Sdk;
 
 namespace Blog.Controllers
@@ -16,16 +14,18 @@ namespace Blog.Controllers
             _oktaClient = oktaClient;
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string prevUrl)
         {            
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Challenge(OpenIdConnectDefaults.AuthenticationScheme);
             }
 
+            if (!string.IsNullOrEmpty(prevUrl))
+                return Redirect(prevUrl);
             return RedirectToAction("Index", "Home");
         }
-
+      
         [HttpPost]
         public IActionResult Logout()
         {

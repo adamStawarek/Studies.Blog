@@ -30,6 +30,12 @@ function getPostComments(id: number) {
     }).responseJSON;
 }
 
+function formatDate(d: string): string {
+    var date = new Date(d);
+    return date.toLocaleString();
+}
+
+
 function createCommentTemplate(id: number) {
     var json = this.getPostComments(id);
     var comments:PostComment[]=new Array();
@@ -47,7 +53,7 @@ function createCommentTemplate(id: number) {
                 '<div class="panel panel-default">' +
                     '<div class="panel-heading">' +
                         '<strong style="margin-right: 10px;">'+c.authorName+'</strong>' +
-                        '<span class="text-muted">'+c.creationTime.toLocaleString()+'</span>'+
+                        '<span class="text-muted">'+formatDate(c.creationTime.toString())+'</span>'+
                     '</div>' +
                     '<div class="panel-body">'+c.content+'</div>'+
                 '</div>'+
@@ -56,3 +62,4 @@ function createCommentTemplate(id: number) {
     });
     $("#commentSection").append(html);
 }
+
