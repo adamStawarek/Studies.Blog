@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Blog
 {
@@ -59,6 +60,13 @@ namespace Blog
                     };
                 });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                //var filePath = Path.Combine(System.AppContext.BaseDirectory, "Dotnet.xml");
+                //c.IncludeXmlComments(filePath);               
+            });
+
             //TODO move connection string to appsettings.json
             var connection = Configuration["connectionString"];
             services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
@@ -81,7 +89,13 @@ namespace Blog
 
             app.UseAuthentication();
 
-            app.UseHttpsRedirection();//comment when use ngrok
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
+            app.UseHttpsRedirection();//comment when using ngrok
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

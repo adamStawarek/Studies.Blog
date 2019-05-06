@@ -23,16 +23,16 @@
 <input type="button" onclick="history.go(-1)" class="btn btn-primary" value="Go back" />
 <hr />
 <section>
-    <h3 class="text-primary">@Model.Comments.Count Comments</h3>
+    <h3 class="text-primary" id="commentsSectionTitle"></h3>
     <div id="commentSection"></div>
 </section>
 <section>
-    <h3 class="text-primary">Leave comment</h3>
+    <h4 class="text-primary">Leave comment</h4>
     @if (User.Identity.IsAuthenticated)
     {
         <div class="row">
             <div class="col-md-9" style="text-align: right">
-                <form asp-action="AddComment" asp-controller="Home" method="post">
+                <form id="commentForm">
                     <textarea name="content" class="form-control" style="height: 250px;"></textarea>
                     <input type="hidden" class="form-control" value="@Model.Id" name="postId" />
                     <button type="submit" class="btn btn-primary" style="margin-top: 5px;">Send</button>
@@ -43,8 +43,8 @@
     else
     {
         var url = Context.Request.GetDisplayUrl();
-        
-        <p>You need to be @Html.ActionLink("logged in", "Login", "Account", new { prevUrl = url },null) to comment</p>
+
+        <p>You need to be @Html.ActionLink("logged in", "Login", "Account", new { prevUrl = url }, null) to comment</p>
     }
 </section>
 
@@ -52,6 +52,6 @@
     {
     <script src="~/js/Home/Details.js"></script>
     <script>
-        createCommentTemplate('@Html.Raw(Model.Id)');
+        setUpPostComments('@Html.Raw(Model.Id)');
     </script>
 }

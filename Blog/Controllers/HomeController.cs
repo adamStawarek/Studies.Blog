@@ -236,7 +236,7 @@ namespace Blog.Controllers
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details","Home",new {id=postId});
+            return Ok(comment);
         }
 
         private static async Task<string> UploadImageAsync(CreatePostViewModel model)

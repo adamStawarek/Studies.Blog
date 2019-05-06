@@ -63,6 +63,7 @@
         <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
         <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
         <PackageReference Include="ThenInclude.EF6" Version="1.0.0.8" />
         <PackageReference Include="TinyMCE" Version="5.0.4" />
         <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet">
