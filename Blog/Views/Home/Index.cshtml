@@ -29,7 +29,7 @@
                 </a>
                 <div class="media-body">
                     <h4 class="media-heading">@Html.ActionLink(post.Title, "Details", new { id = post.Id })</h4>
-                    <p class="text-right">By @post.Author</p>
+                    <p class="text-right">By @post.User.Name</p>
                     <div style="margin-bottom: 20px">
                         @if (Model.SearchWord != "")
                         {

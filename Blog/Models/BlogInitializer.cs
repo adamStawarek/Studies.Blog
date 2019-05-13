@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Blog.Models
 {
@@ -53,7 +54,7 @@ namespace Blog.Models
             {
                 posts.Add(new Post()
                 {
-                    Author = "adam stawarek",
+                    UserId = System.Security.Claims.ClaimsPrincipal.Current.Claims.First(c => c.Properties.Values.Contains("sub"))?.Value,
                     Title = $"Post #{i}",
                     Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut" +
                               " labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +

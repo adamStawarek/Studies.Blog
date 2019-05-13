@@ -24,7 +24,7 @@ namespace Blog.Controllers
 
         public HomeController(BlogContext context)
         {
-            this._context = context;
+            _context = context;
             CreateLogger();
         }
 
@@ -58,6 +58,7 @@ namespace Blog.Controllers
                                 .Where(p => p.Content.ToLower().Contains(searchWord.ToLower()))                                
                                 .Include(p => p.PostTags).ThenInclude(p => p.Tag)
                                 .Include(p => p.Comments)
+                                .Include(p=>p.User)
                                 .Where(p => p.PostTags.Any(t => tagIds.Contains(t.TagId)))
                                 .OrderByDescending(d => d.Id)
                                 .Batch(4)
@@ -78,6 +79,7 @@ namespace Blog.Controllers
                         .Where(p => p.Content==null || p.Content.ToLower().Contains(word))
                         .Include(p => p.PostTags).ThenInclude(p => p.Tag)
                         .Include(p => p.Comments)
+                        .Include(p=>p.User)
                         .OrderByDescending(d => d.Id)
                         .Batch(4)
                         .ElementAt(currentPage - 1)
@@ -131,7 +133,9 @@ namespace Blog.Controllers
 
         public IActionResult Details(int id)
         {
-            var post = _context.Posts.Include(p=>p.Comments).FirstOrDefault(p => p.Id == id);
+            var post = _context.Posts
+                .Include(p=>p.User).Include(p=>p.Comments)
+                .FirstOrDefault(p => p.Id == id);
             return View(post);
         }  
 
@@ -210,7 +214,7 @@ namespace Blog.Controllers
                 Title = post.Title,
                 Content = post.Content,
                 PostTags = post.PostTags,
-                Author = HttpContext.User.Identity.Name,
+                UserId = User.Claims.First(c => c.Properties.Values.Contains("sub"))?.Value,
                 CreationTime = DateTime.Today,
                 LastEditTime = DateTime.Today,
                 Image = imageUrl ?? model.Post.Image,
@@ -230,7 +234,8 @@ namespace Blog.Controllers
             if (postId == null) return new BadRequestResult();
             var comment=new Comment()
             {
-                AuthorId = 1,AuthorName = User.Identity.Name,Content = content,CreationTime = DateTime.Now,LastEditTime = DateTime.Now,
+                Content = content,CreationTime = DateTime.Now,LastEditTime = DateTime.Now,
+                UserId = User.Claims.First(c => c.Properties.Values.Contains("sub"))?.Value,
                 PostId = (int)postId,State = State.WaitingForApproval
             };
             _context.Comments.Add(comment);

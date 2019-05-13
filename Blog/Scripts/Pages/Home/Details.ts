@@ -6,25 +6,33 @@
 
     public postId: number;
 
-    public authorName: string;
-
-    public authorId: number;
+    public userId: string;   
 
     public creationTime: Date;
 
     public lastEditTime: Date;
 
     public state: number;
+
+    public author: string;
+}
+
+class User {
+
+    public id: string;
+
+    public name: string;
 }
 
 window.onload = () => {
-    var baseUrl = document.location.origin; 
-
+    var baseUrl = document.location.origin;
+    var user = new User();
+    var dbUser = getUserName();
+    $.extend(user,dbUser);
     $("#commentForm").submit(e => {
         e.preventDefault();
         var $form = $("#commentForm");
-        var formData = getFormData($form);
-        console.log(formData);
+        var formData = getFormData($form);       
         $.ajax({
             type: 'post',
             url:baseUrl+'/home/addComment',
@@ -33,6 +41,7 @@ window.onload = () => {
             success(data) {
                 var comment = new PostComment();
                 $.extend(comment, data);
+                comment.author = user.name;
                 console.log(data);
                 var html = createCommentTemplate(comment);
                 $("#commentSection").append(html);
@@ -45,6 +54,20 @@ window.onload = () => {
         return false;
     });
 
+}
+
+function getUserName() {
+    var baseUrl = document.location.origin;
+    return $.ajax({
+        url: baseUrl + "/api/users/current",
+        type: "GET",
+        async: false,
+        dataType: "json",
+        success(data) {
+            console.log(data);
+            return data;
+        }
+    }).responseJSON;
 }
 
 function getFormData($form) {
@@ -78,6 +101,7 @@ function formatDate(d: string): string {
 
 function setUpPostComments(id: number) {
     var json = this.getPostComments(id);
+    console.log(json);
     var comments:PostComment[]=new Array();
     $.extend(comments, json);
     console.log(comments);
@@ -99,7 +123,7 @@ function createCommentTemplate(comment: PostComment) {
         '<div class="col-sm-8">' +
         '<div class="panel panel-default">' +
         '<div class="panel-heading">' +
-        '<strong style="margin-right: 10px;">' + comment.authorName + '</strong>' +
+        '<strong style="margin-right: 10px;">' + comment.author + '</strong>' +
         '<span class="text-muted">' + formatDate(comment.creationTime.toString()) + '</span>' +
         '</div>' +
         '<div class="panel-body">' + comment.content + '</div>' +

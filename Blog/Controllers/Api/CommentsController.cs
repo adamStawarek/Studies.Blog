@@ -27,9 +27,11 @@ namespace Blog.Controllers.Api
 
         // GET: api/Comments
         [HttpGet("post/{id}")]
-        public IEnumerable<Comment> GetPostComments([FromRoute]int id)
+        public IEnumerable<dynamic> GetPostComments([FromRoute]int id)
         {
-            return _context.Comments.Where(c=>c.PostId==id);
+            return _context.Comments.Include(c=>c.User).Where(c=>c.PostId==id)
+                .Select(c=>new {Content=c.Content,CreationTime=c.CreationTime,Id=c.Id
+                    ,LastEditTime=c.LastEditTime,PostId=c.PostId,State=c.State,Author=c.User.Name});
         }
 
         // GET: api/Comments/5
