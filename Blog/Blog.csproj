@@ -6,10 +6,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="Views\Comments\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Remove="Scripts\file.ts" />
+      <None Remove="Scripts\Pages\Comments\Index.ts" />
       <None Remove="Scripts\Pages\Home\Create.ts" />
       <None Remove="Scripts\Pages\Home\Details.ts" />
       <None Remove="Scripts\Pages\Home\Edit.ts" />
+      <None Remove="Scripts\Pages\Shared\Models.ts" />
       <None Remove="Scripts\Pages\Shared\PexelHelper.ts" />
       <None Remove="Scripts\Pages\Shared\Pexels.ts" />
     </ItemGroup>
@@ -72,10 +78,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="Views\Comments\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <TypeScriptCompile Include="Scripts\Pages\Comments\Index.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Home\Create.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Home\Details.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Home\Edit.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Home\Index.ts" />
+      <TypeScriptCompile Include="Scripts\Pages\Shared\Models.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Shared\PexelHelper.ts" />
       <TypeScriptCompile Include="Scripts\Pages\Shared\Pexels.ts" />
     </ItemGroup>

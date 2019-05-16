@@ -1,30 +1,4 @@
-﻿class PostComment {
-
-    public id: number;
-
-    public content: string;
-
-    public postId: number;
-
-    public userId: string;   
-
-    public creationTime: Date;
-
-    public lastEditTime: Date;
-
-    public state: number;
-
-    public author: string;
-}
-
-class User {
-
-    public id: string;
-
-    public name: string;
-}
-
-window.onload = () => {
+﻿window.onload = () => {
     var baseUrl = document.location.origin;
     var user = new User();
     var dbUser = getUserName();
@@ -92,11 +66,6 @@ function getPostComments(id: number) {
             return data;
         }
     }).responseJSON;
-}
-
-function formatDate(d: string): string {
-    var date = new Date(d);
-    return date.toLocaleString();
 }
 
 function setUpPostComments(id: number) {

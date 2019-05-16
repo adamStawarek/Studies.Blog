@@ -1,0 +1,22 @@
+﻿@model object
+
+@{
+    Layout = "_Layout";
+}
+
+<section>
+    <h3 class="text-primary" style="margin-bottom: 50px" id="commentsSectionTitle"></h3>
+    <div id="commentSection"></div>
+</section>
+<div id="pagination" style="text-align: right"></div>
+
+@section Scripts{
+    <style>
+        .panel-heading a {
+            cursor: pointer;
+            margin-left: 15px;
+            color: #337ab7;
+        }                           
+    </style>
+    <script src="~/js/Comments/Index.js"></script>
+}

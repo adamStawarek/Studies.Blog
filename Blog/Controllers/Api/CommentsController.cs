@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Blog.Models;
+using MoreLinq;
 
 namespace Blog.Controllers.Api
 {
@@ -12,17 +13,39 @@ namespace Blog.Controllers.Api
     public class CommentsController : ControllerBase
     {
         private readonly BlogContext _context;
+        private const int batchSize = 5; //number of comments on one page
 
         public CommentsController(BlogContext context)
         {
             _context = context;
         }
 
-        // GET: api/Comments
-        [HttpGet]
-        public IEnumerable<Comment> GetComments()
+        // GET: api/Comments/count
+        [HttpGet("count")]
+        public int GetCommentsCount()
         {
-            return _context.Comments;
+            return _context.Comments.Count();
+        }
+
+        // GET: api/Comments/page/2
+        [HttpGet("page/{pageNo}")]
+        public IEnumerable<dynamic> GetComments(int pageNo)
+        {
+            return _context.Comments
+                .Include(c=>c.User)
+                .Include(p=>p.Post)
+                .Batch(batchSize)
+                .ElementAt(pageNo-1)
+                .Select(c => new {
+                    Content = c.Content,
+                    CreationTime = c.CreationTime,
+                    Id = c.Id,
+                    LastEditTime = c.LastEditTime,
+                    PostId = c.PostId,
+                    State = c.State,
+                    Author = c.User.Name,
+                    PostTitle=c.Post.Title
+                }); 
         }
 
         // GET: api/Comments
