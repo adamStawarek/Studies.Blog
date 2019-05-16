@@ -21,17 +21,18 @@ namespace Blog.Controllers.Api
         }
 
         // GET: api/Comments/count
-        [HttpGet("count")]
-        public int GetCommentsCount()
+        [HttpGet("count/{state}")]
+        public int GetCommentsCount(int state)
         {
-            return _context.Comments.Count();
+            return _context.Comments.Count(c=>c.State==(State)state);
         }
 
         // GET: api/Comments/page/2
-        [HttpGet("page/{pageNo}")]
-        public IEnumerable<dynamic> GetComments(int pageNo)
+        [HttpGet("page/{state}/{pageNo}")]
+        public IEnumerable<dynamic> GetComments(int state,int pageNo)
         {
             return _context.Comments
+                .Where(c=>c.State==(State)state)
                 .Include(c=>c.User)
                 .Include(p=>p.Post)
                 .Batch(batchSize)
@@ -48,7 +49,7 @@ namespace Blog.Controllers.Api
                 }); 
         }
 
-        // GET: api/Comments
+        // GET: api/Comments/post/122
         [HttpGet("post/{id}")]
         public IEnumerable<dynamic> GetPostComments([FromRoute]int id)
         {
@@ -56,93 +57,47 @@ namespace Blog.Controllers.Api
                 .Select(c=>new {Content=c.Content,CreationTime=c.CreationTime,Id=c.Id
                     ,LastEditTime=c.LastEditTime,PostId=c.PostId,State=c.State,Author=c.User.Name});
         }
-
-        // GET: api/Comments/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetComment([FromRoute] int id)
+     
+        // DELETE: api/Comments/5
+        [HttpDelete("reject/{id}")]
+        public IActionResult RejectComment([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var comment = await _context.Comments.FindAsync(id);
-
+            var comment = _context.Comments.Find(id);
             if (comment == null)
             {
                 return NotFound();
             }
+
+            comment.State = State.Rejected;
+            _context.Comments.Update(comment);
+            _context.SaveChanges();
 
             return Ok(comment);
         }
 
-        // PUT: api/Comments/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment([FromRoute] int id, [FromBody] Comment comment)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != comment.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(comment).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Comments
-        [HttpPost]
-        public async Task<IActionResult> PostComment([FromBody] Comment comment)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
-        }
-
         // DELETE: api/Comments/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment([FromRoute] int id)
+        [HttpPut("approve/{id}")]
+        public IActionResult ApproveComment([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = _context.Comments.Find(id);
             if (comment == null)
             {
                 return NotFound();
             }
 
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            comment.State = State.Approved;
+            _context.Comments.Update(comment);
+            _context.SaveChanges();
 
             return Ok(comment);
         }

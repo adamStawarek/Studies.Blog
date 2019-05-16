@@ -5,7 +5,18 @@
 }
 
 <section>
-    <h3 class="text-primary" style="margin-bottom: 50px" id="commentsSectionTitle"></h3>
+    <div class="row">
+        <h3 class="text-primary col-sm-6" style="margin-bottom: 50px" id="commentsSectionTitle"></h3>
+        <div class="form-group col-sm-3" style="margin-top: 10px">        
+            <label>Display comments:</label>
+            <select class="form-control" id="dropdown">
+                <option>waiting for approval</option>
+                <option>approved</option>
+                <option>rejected</option>
+            </select>
+        </div>  
+    </div>
+   
     <div id="commentSection"></div>
 </section>
 <div id="pagination" style="text-align: right"></div>

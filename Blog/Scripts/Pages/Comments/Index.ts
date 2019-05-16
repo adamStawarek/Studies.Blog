@@ -1,24 +1,29 @@
 ﻿var currentPage: number = 1;
 var numOfComments: number;
 var commentsPerPage:number = 5;
+var option: string = "waiting for approval";
+var optionDict = {
+    "waiting for approval": 0,
+    "approved": 1,
+    "rejected": 2
+}
 
 window.onload = () => {
     numOfComments = getCommentsCount();
     setUpComments(currentPage);
-    createPaginationBox();    
-    $("#pagination .btn").click(event => {
-        var text = $(event.target).text();
-        setUpComments(Number(text));
-        $("#pagination .btn").removeClass("btn-primary");
-        $("#pagination .btn").addClass("btn-default");
-        $(event.target).addClass("btn-primary");
+    createPaginationBox(); 
+
+    $('#dropdown').change(() => {
+        option = $("#dropdown option:selected").text();
+        numOfComments = getCommentsCount();
+        setUpComments(1);        
     });
 }
 
 function getComments(page: number) {
     var baseUrl = document.location.origin;
     return $.ajax({
-        url: baseUrl + "/api/comments/page/"+page,
+        url: baseUrl + "/api/comments/page/" +optionDict[option]+"/"+page,
         type: "GET",
         async: false,
         dataType: "json",
@@ -32,7 +37,7 @@ function getComments(page: number) {
 function getCommentsCount() {
     var baseUrl = document.location.origin;
     return $.ajax({
-        url: baseUrl + "/api/comments/count",
+        url: baseUrl + "/api/comments/count/"+optionDict[option],
         type: "GET",
         async: false,
         dataType: "json",
@@ -59,10 +64,85 @@ function setUpComments(page: number) {
         var baseUrl = document.location.origin;
         window.location.href = baseUrl + "/home/details/" + text;
     });
+
+    $(".comment .reject").click(event => {
+        var parentDivId = $(event.target).closest(".comment").attr("id");
+        var id = parentDivId.split('_')[1];
+        var comment = new PostComment();
+        var result = rejectComment(Number(id));
+        $.extend(comment, result);
+
+        numOfComments = getCommentsCount();
+        setUpComments(1);
+        createPaginationBox(); 
+    });
+
+    $(".comment .approve").click(event => {
+        var parentDivId = $(event.target).closest(".comment").attr("id");
+        var id = parentDivId.split('_')[1];
+        var comment = new PostComment();
+        var result = approveComment(Number(id));
+        $.extend(comment, result);
+
+        numOfComments = getCommentsCount();
+        setUpComments(1);
+        createPaginationBox(); 
+        //var icon = $('#' + parentDivId + ' .glyphicon');
+
+        //icon.removeClass('glyphicon-remove')
+        //    .removeClass("glyphicon-minus")
+        //    .addClass("glyphicon-ok");
+        //icon.css("color", "green");
+    });
+
+    createPaginationBox(); 
+}
+
+function approveComment(id: number) {
+    var baseUrl = document.location.origin;
+    return $.ajax({
+        url: baseUrl + "/api/comments/approve/"+id,
+        type: "PUT",
+        async: false,
+        dataType: "json",
+        success(data) {
+            return data;
+        }
+    }).responseJSON;
+}
+
+function rejectComment(id: number) {
+    var baseUrl = document.location.origin;
+    return $.ajax({
+        url: baseUrl + "/api/comments/reject/"+id,
+        type: "DELETE",
+        async: false,
+        dataType: "json",
+        success(data) {
+            return data;
+        }
+    }).responseJSON;
+}
+
+interface IConWithColor {
+    icon: string;
+    color: string;
 }
 
 function createCommentTemplateWithAcceptanceActions(comment: PostComment) {
-    var html = '<div class="row comment">' +
+    var icon: IConWithColor = {icon:'',color:''};
+    if (comment.state == State.Approved) {
+        icon.icon = 'glyphicon-ok';
+        icon.color = 'green';
+    } else if (comment.state == State.Rejected) {
+        icon.icon = 'glyphicon-remove';
+        icon.color = 'red';
+    } else {
+        icon.icon = 'glyphicon-minus';
+        icon.color = 'blue';
+    }
+
+    var html = '<div class="row comment" id="comment_'+comment.id+'">' +
         '<div class="col-sm-1">' +
             '<div class="thumbnail">' +
                 '<img class="img-responsive" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">' +
@@ -78,9 +158,14 @@ function createCommentTemplateWithAcceptanceActions(comment: PostComment) {
                 '<div class="panel-body">' + comment.content + '</div>' +
             '</div>' +
         '</div>' +
-        '<di class="col-sm-3">' +
-            '<button class="btn btn-primary" style="margin-right: 5px;">Approve</button>' +
-            '<button class="btn btn-danger" style="margin-right: 5px;">Reject</button>' +
+        '<div class="col-sm-3">' +
+            '<div style="margin-right: auto; margin-left: auto; width: 160px;">'+
+                '<button class="btn btn-primary approve" style="margin-right: 5px;">Approve</button>' +
+                '<button class="btn btn-danger reject" style="margin-right: 5px;">Reject</button>' +
+            '</div>' +
+            '<div style="text-align:center">' +
+                '<span style="font-size: 40px;color: '+icon.color+';" class="glyphicon '+icon.icon+'" aria-hidden="true"></span>'+
+            '</div>'+
         '</div>'+
         '</div>';
     return html;
@@ -94,20 +179,26 @@ function createPaginationBox() {
             btnStateClass = 'btn-primary';
         html += '<button class="btn '+btnStateClass+'" style="margin-right: 5px;">' + j + '</button>';
     }
-    $("#pagination").append(html);
+    $("#pagination").html(html);
+
+    $("#pagination .btn").click(event => {
+        var text = $(event.target).text();
+        setUpComments(Number(text));
+        $(this).addClass("btn-primary");
+    });
 }
 
 function setUpTitle() {
-
-    var title = "";
+    var title = '';
     if (numOfComments === 0) {
-        title = "No comments";
+        title = "No comments ";
     }
     else if (numOfComments === 1) {
-        title = "1 comment";
+        title = "1 comment ";
     }
     else {
-        title = numOfComments + " comments waiting for acceptance";
+        
+        title = numOfComments + " comments ";
     }
-    $("#commentsSectionTitle").text(title);
+    $("#commentsSectionTitle").text(title+option);
 }

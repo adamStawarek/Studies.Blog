@@ -14,9 +14,18 @@
 
     public lastEditTime: Date;
 
-    public state: number;
+    public state: State;
 
     public author: string;
+}
+
+enum State {
+
+    WaitingForApproval = 0,
+
+    Approved = 1,
+
+    Rejected = 2
 }
 
 class User {
