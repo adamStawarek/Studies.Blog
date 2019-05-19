@@ -40,3 +40,29 @@ function formatDate(d: string): string {
     var date = new Date(d);
     return date.toLocaleString();
 }
+
+function approveComment(id: number) {
+    var baseUrl = document.location.origin;
+    return $.ajax({
+        url: baseUrl + "/api/comments/approve/" + id,
+        type: "PUT",
+        async: false,
+        dataType: "json",
+        success(data) {
+            return data;
+        }
+    }).responseJSON;
+}
+
+function rejectComment(id: number) {
+    var baseUrl = document.location.origin;
+    return $.ajax({
+        url: baseUrl + "/api/comments/reject/" + id,
+        type: "DELETE",
+        async: false,
+        dataType: "json",
+        success(data) {
+            return data;
+        }
+    }).responseJSON;
+}

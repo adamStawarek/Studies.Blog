@@ -13,13 +13,7 @@
             data: formData,          
             dataType: 'json',
             success(data) {
-                var comment = new PostComment();
-                $.extend(comment, data);
-                comment.author = user.name;
-                console.log(data);
-                var html = createCommentTemplate(comment);
-                $("#commentSection").append(html);
-                setUpCommentsSectionTitle();
+                $("#commentAfterPostMessage").text("Your message will be visible after review by admin");
             },
             error(data) {
                 console.log(data);
@@ -69,6 +63,7 @@ function getPostComments(id: number) {
 }
 
 function setUpPostComments(id: number) {
+    var postId = id;
     var json = this.getPostComments(id);
     console.log(json);
     var comments:PostComment[]=new Array();
@@ -78,26 +73,37 @@ function setUpPostComments(id: number) {
     comments.forEach((c) => {
         html += createCommentTemplate(c);
     });
-    $("#commentSection").append(html);
+    $("#commentSection").html(html);
+
+    $(".comment .reject").click(event => {
+        var parentDivId = $(event.target).closest(".comment").attr("id");
+        var id = parentDivId.split('_')[1];
+        var comment = new PostComment();
+        var result = rejectComment(Number(id));
+        $.extend(comment, result);
+        setUpPostComments(postId);
+    });
+
     setUpCommentsSectionTitle();
 }
 
 function createCommentTemplate(comment: PostComment) {
-    var html = '<div class="row comment">' +
+    var html = '<div class="row comment" id="comment_' + comment.id +'">' +
         '<div class="col-sm-1">' +
-        '<div class="thumbnail">' +
-        '<img class="img-responsive" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">' +
-        '</div>' +
+            '<div class="thumbnail">' +
+                '<img class="img-responsive" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">' +
+            '</div>' +
         '</div>' +
         '<div class="col-sm-8">' +
-        '<div class="panel panel-default">' +
-        '<div class="panel-heading">' +
-        '<strong style="margin-right: 10px;">' + comment.author + '</strong>' +
-        '<span class="text-muted">' + formatDate(comment.creationTime.toString()) + '</span>' +
+            '<div class="panel panel-default">' +
+                '<div class="panel-heading">' +
+                    '<strong style="margin-right: 10px;">' + comment.author + '</strong>' +
+                    '<span class="text-muted">' + formatDate(comment.creationTime.toString()) + '</span>' +
+                '</div>' +
+                '<div class="panel-body">' + comment.content + '</div>' +
+            '</div>' +
         '</div>' +
-        '<div class="panel-body">' + comment.content + '</div>' +
-        '</div>' +
-        '</div>' +
+        '<button class="btn btn-danger reject" style="margin-right: 5px;">Reject</button>' +
         '</div>';
     return html;
 }

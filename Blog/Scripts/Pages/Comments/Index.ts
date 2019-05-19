@@ -86,42 +86,10 @@ function setUpComments(page: number) {
 
         numOfComments = getCommentsCount();
         setUpComments(1);
-        createPaginationBox(); 
-        //var icon = $('#' + parentDivId + ' .glyphicon');
-
-        //icon.removeClass('glyphicon-remove')
-        //    .removeClass("glyphicon-minus")
-        //    .addClass("glyphicon-ok");
-        //icon.css("color", "green");
+        createPaginationBox();         
     });
 
     createPaginationBox(); 
-}
-
-function approveComment(id: number) {
-    var baseUrl = document.location.origin;
-    return $.ajax({
-        url: baseUrl + "/api/comments/approve/"+id,
-        type: "PUT",
-        async: false,
-        dataType: "json",
-        success(data) {
-            return data;
-        }
-    }).responseJSON;
-}
-
-function rejectComment(id: number) {
-    var baseUrl = document.location.origin;
-    return $.ajax({
-        url: baseUrl + "/api/comments/reject/"+id,
-        type: "DELETE",
-        async: false,
-        dataType: "json",
-        success(data) {
-            return data;
-        }
-    }).responseJSON;
 }
 
 interface IConWithColor {

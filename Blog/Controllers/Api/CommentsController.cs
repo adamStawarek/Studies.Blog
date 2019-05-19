@@ -53,7 +53,7 @@ namespace Blog.Controllers.Api
         [HttpGet("post/{id}")]
         public IEnumerable<dynamic> GetPostComments([FromRoute]int id)
         {
-            return _context.Comments.Include(c=>c.User).Where(c=>c.PostId==id)
+            return _context.Comments.Include(c=>c.User).Where(c=>c.PostId==id&&c.State==State.Approved)
                 .Select(c=>new {Content=c.Content,CreationTime=c.CreationTime,Id=c.Id
                     ,LastEditTime=c.LastEditTime,PostId=c.PostId,State=c.State,Author=c.User.Name});
         }

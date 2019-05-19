@@ -58,10 +58,10 @@
                     <ul class="list-inline list-unstyled">
                         <li><span><i class="glyphicon glyphicon-calendar"></i> @post.LastEditTime.ToShortDateString() </span></li>
 
-                        @if (post.Comments.Count > 0)
+                        @if (post.Comments.Count(c => c.State == State.Approved) > 0)
                         {
                             <li>|</li>
-                            <span><i class="glyphicon glyphicon-comment"></i> @post.Comments.Count comments</span>
+                            <span><i class="glyphicon glyphicon-comment"></i> @post.Comments.Count(c => c.State==State.Approved) comments</span>
                             <li>|</li>
                         }
 
